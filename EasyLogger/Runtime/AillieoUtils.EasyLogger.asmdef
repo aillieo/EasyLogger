@@ -1,0 +1,15 @@
+{
+    "name": "AillieoUtils.EasyLogger",
+    "references": [
+        "AillieoUtils.FileUtils"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
