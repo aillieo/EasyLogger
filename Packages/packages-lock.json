@@ -1,5 +1,12 @@
 {
   "dependencies": {
+    "com.aillieo.unity-file-utils": {
+      "version": "https://github.com/aillieo/UnityFileUtils.git#upm",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "d7e4ce43b0cc849eb4e53068e52e93942c8fc6c3"
+    },
     "com.unity.2d.animation": {
       "version": "3.2.5",
       "depth": 0,
