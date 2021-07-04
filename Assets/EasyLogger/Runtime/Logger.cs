@@ -19,6 +19,19 @@ namespace AillieoUtils.EasyLogger
             appenders.Add(appender);
         }
 
+        public void AddAppenders(params IAppender[] appenders)
+        {
+            foreach (var appender in appenders)
+            {
+                this.appenders.Add(appender);
+            }
+        }
+
+        public void RemoveAppender(IAppender appender)
+        {
+            appenders.Remove(appender);
+        }
+
         public void RemoveAllAppenders()
         {
             appenders.Clear();
@@ -49,11 +62,11 @@ namespace AillieoUtils.EasyLogger
             if ((this.filter & logLevel) > 0)
             {
                 LogItem logItem = new LogItem() { logLevel = logLevel, message = Convert.ToString(message) };
-                Dispatch(logItem);
+                Dispatch(ref logItem);
             }
         }
 
-        private void Dispatch(LogItem logItem)
+        private void Dispatch(ref LogItem logItem)
         {
             foreach (var a in appenders)
             {
