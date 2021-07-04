@@ -7,6 +7,8 @@ namespace AillieoUtils.EasyLogger
 {
     public class FileAppender : IAppender
     {
+        private static LogFileWriter writer;
+
         public void OnReceiveLogItem(ref LogItem logItem)
         {
             if (writer == null)
@@ -17,7 +19,6 @@ namespace AillieoUtils.EasyLogger
             writer.AppendLogItem(ref logItem);
         }
 
-        private static LogFileWriter writer;
         private static void OnApplicationQuit()
         {
             if (writer != null)

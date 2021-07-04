@@ -9,7 +9,7 @@ namespace AillieoUtils.EasyLogger
         Log = 2,
         Warning = 4,
         Error = 8,
-        NonDebug = 14,
-        Any = 15,
+        NonDebug = Log | Warning | Error,
+        Any = NonDebug | Debug,
     }
 }

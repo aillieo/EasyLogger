@@ -1,17 +1,26 @@
 using System;
+using System.Collections.Generic;
 
 namespace AillieoUtils.EasyLogger
 {
     public static class LoggerFactory
     {
-        public static Logger CreateLogger(string name)
+        private static readonly Dictionary<string, Logger> cachedInstances = new Dictionary<string, Logger>();
+
+        public static Logger GetLogger(string name)
         {
-            return new Logger(name);
+            if (!cachedInstances.TryGetValue(name, out Logger instance))
+            {
+                instance = new Logger(name);
+                cachedInstances.Add(name, instance);
+            }
+
+            return instance;
         }
 
-        public static Logger CreateLogger<T>()
+        public static Logger GetLogger<T>()
         {
-            return CreateLogger(typeof(T).Name);
+            return GetLogger(typeof(T).Name);
         }
     }
 }

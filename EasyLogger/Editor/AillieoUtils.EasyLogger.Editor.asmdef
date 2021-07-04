@@ -1,9 +1,9 @@
 {
     "name": "AillieoUtils.EasyLogger.Editor",
     "references": [
-        "GUID:fe101e24f158fbf4fac2afdd1d4632dc",
-        "GUID:ccd073e68bc58334da8b4779a190b194",
-        "GUID:f300028ff093898439e868555d82cb6a"
+        "AillieoUtils.EasyLogger",
+        "AillieoUtils.FileUtils",
+        "AillieoUtils.FileUtils.Editor"
     ],
     "includePlatforms": [
         "Editor"
