@@ -4,6 +4,8 @@ namespace AillieoUtils.EasyLogger
 {
     public class IMGUIAppender : IAppender
     {
+        public IFormatter formatter { get; set; }
+
         public void OnReceiveLogItem(ref LogItem logItem)
         {
             EnsureInstance();
@@ -12,18 +14,24 @@ namespace AillieoUtils.EasyLogger
 
         public enum Alignment
         {
-            TopLeft =       0x0000 | 0x0000,
-            Top =           0x0001 | 0x0000,
-            TopRight =      0x0010 | 0x0000,
-            Left =          0x0000 | 0x0100,
-            Center =        0x0001 | 0x0100,
-            Right =         0x0010 | 0x0100,
-            BottomLeft =    0x0000 | 0x1000,
-            Bottom =        0x0001 | 0x1000,
-            BottomRight =   0x0010 | 0x1000,
+            TopLeft =       0b0000 | 0b0000,
+            Top =           0b0001 | 0b0000,
+            TopRight =      0b0010 | 0b0000,
+            Left =          0b0000 | 0b0100,
+            Center =        0b0001 | 0b0100,
+            Right =         0b0010 | 0b0100,
+            BottomLeft =    0b0000 | 0b1000,
+            Bottom =        0b0001 | 0b1000,
+            BottomRight =   0b0010 | 0b1000,
         }
 
-        public Alignment switcherWidgetPosition;
+        public void SetSwitcherWidgetPosition(Alignment alignment)
+        {
+            EnsureInstance();
+            int horizontal = (int)alignment & 0b11;
+            int vertical = ((int)alignment & 0b1100) >> 2;
+            instance.SetSwitcherPosition(horizontal, vertical);
+        }
 
         private static IMGUILogDrawer instance;
 

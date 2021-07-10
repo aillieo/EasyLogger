@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace AillieoUtils.EasyLogger
 {
-    internal class EasyLoggerConfig
+    internal class EasyLoggerConfigEditor
     {
         [SettingsProvider]
         private static SettingsProvider CreateSettingsProvider()
