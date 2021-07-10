@@ -13,7 +13,7 @@ namespace AillieoUtils.EasyLogger
 
         internal LogFileWriter()
         {
-            string path = Path.Combine(Application.dataPath, $"{DateTime.Now:yyyyMMddHHmmssfff}.log");
+            string path = Path.Combine(Application.dataPath, "..", $"{DateTime.Now:yyyyMMddHHmmssfff}.log");
             fileInfo = new FileInfo(path);
         }
 
@@ -37,19 +37,29 @@ namespace AillieoUtils.EasyLogger
 
         internal void AppendLogItem(ref LogItem logItem)
         {
+            if (!EnsureWriter())
+            {
+                return;
+            }
+
+            streamWriter.WriteLine(logItem.message);
+        }
+
+        private bool EnsureWriter()
+        {
             if (streamWriter == null)
             {
                 if (fileInfo == null)
                 {
-                    return;
+                    return false;
                 }
                 else
                 {
+                    // FileUtils.Roller.FileRoll("");
                     streamWriter = fileInfo.CreateText();
                 }
             }
-
-            streamWriter.WriteLine(logItem.message);
+            return true;
         }
     }
 }

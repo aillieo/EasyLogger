@@ -7,6 +7,8 @@ namespace AillieoUtils.EasyLogger
 {
     public class FileAppender : IAppender
     {
+        public IFormatter formatter { get; set; }
+
         private static LogFileWriter writer;
 
         public void OnReceiveLogItem(ref LogItem logItem)

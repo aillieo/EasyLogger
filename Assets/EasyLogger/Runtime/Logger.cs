@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace AillieoUtils.EasyLogger
 {
@@ -7,12 +8,61 @@ namespace AillieoUtils.EasyLogger
     {
         internal Logger(string name)
         {
-
+            this.name = name;
         }
 
-        private List<IAppender> appenders = new List<IAppender>();
+        private readonly string name;
 
-        public LogLevel filter { get; set; } = LogLevel.Any;
+        private static readonly IFormatter defaultFormatter = new DefaultFormatter();
+
+        private static bool isReceivingUnityLogEvents = false;
+        public static bool receiveUnityLogEvents
+        {
+            get
+            {
+                return isReceivingUnityLogEvents;
+            }
+            set
+            {
+                if (isReceivingUnityLogEvents != value)
+                {
+                    isReceivingUnityLogEvents = value;
+                    if (isReceivingUnityLogEvents)
+                    {
+                        Application.logMessageReceived -= OnUnityLogEvent;
+                        Application.logMessageReceived += OnUnityLogEvent;
+                    }
+                    else
+                    {
+                        Application.logMessageReceived -= OnUnityLogEvent;
+                    }
+                }
+            }
+        }
+
+        private LogLevel? instanceFilter = null;
+        public static LogLevel sharedFilter = LogLevel.Any;
+
+        public LogLevel filter
+        {
+            get
+            {
+                if (instanceFilter.HasValue)
+                {
+                    return instanceFilter.Value;
+                }
+
+                return sharedFilter;
+            }
+
+            set
+            {
+                instanceFilter = value;
+            }
+        }
+
+        private static readonly List<IAppender> sharedAppenders = new List<IAppender>();
+        private List<IAppender> appenders = null;
 
         public void AddAppender(IAppender appender)
         {
@@ -21,19 +71,28 @@ namespace AillieoUtils.EasyLogger
 
         public void AddAppenders(params IAppender[] appenders)
         {
-            foreach (var appender in appenders)
+            if (this.appenders == null)
             {
-                this.appenders.Add(appender);
+                this.appenders = new List<IAppender>(sharedAppenders);
             }
+            this.appenders.AddRange(appenders);
         }
 
         public void RemoveAppender(IAppender appender)
         {
+            if (this.appenders == null)
+            {
+                this.appenders = new List<IAppender>(sharedAppenders);
+            }
             appenders.Remove(appender);
         }
 
         public void RemoveAllAppenders()
         {
+            if (this.appenders == null)
+            {
+                this.appenders = new List<IAppender>(sharedAppenders);
+            }
             appenders.Clear();
         }
 
@@ -61,18 +120,36 @@ namespace AillieoUtils.EasyLogger
         {
             if ((this.filter & logLevel) > 0)
             {
-                LogItem logItem = new LogItem() { logLevel = logLevel, message = Convert.ToString(message) };
-                Dispatch(ref logItem);
+                foreach (var appender in appenders ?? sharedAppenders)
+                {
+                    try
+                    {
+                        IFormatter formatter = appender.formatter ?? defaultFormatter;
+                        LogItem logItem = new LogItem() { logLevel = logLevel, message = formatter.Format(message) };
+                        appender.OnReceiveLogItem(ref logItem);
+                    }
+                    catch
+                    {
+                    }
+                }
             }
         }
 
-        private void Dispatch(ref LogItem logItem)
+        private static void OnUnityLogEvent(string condition, string stackTrace, LogType type)
         {
-            foreach (var a in appenders)
+            Logger logger = LoggerFactory.GetLogger("Unity");
+            switch (type)
             {
-                a.OnReceiveLogItem(ref logItem);
+            case LogType.Warning:
+                logger.Warning(condition);
+                break;
+            case LogType.Error:
+                logger.Error(condition);
+                break;
+            default:
+                logger.Log(condition);
+                break;
             }
         }
     }
-
 }

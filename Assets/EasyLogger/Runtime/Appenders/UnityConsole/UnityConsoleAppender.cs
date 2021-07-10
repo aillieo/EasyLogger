@@ -2,6 +2,8 @@ namespace AillieoUtils.EasyLogger
 {
     public class UnityConsoleAppender : IAppender
     {
+        public IFormatter formatter { get; set; }
+
         private int internalCall = 0;
 
         public void OnReceiveLogItem(ref LogItem logItem)

@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Linq;
-using UnityEditor;
 using UnityEngine;
 
 namespace AillieoUtils.EasyLogger
@@ -23,8 +22,8 @@ namespace AillieoUtils.EasyLogger
         private GUIContent warnicon;
         private GUIContent erroricon;
 
-        private Rect switcherRect = new Rect(0, 0, 100, 50);
-        private Rect buttonRect = new Rect(25, 12.5f, 50, 25);
+        private Rect switcherRect = new Rect(0, 0, 100, 80);
+        private int switcherBorder = 20;
         private Vector2 scrollPosition = Vector2.zero;
         private bool dirty = false;
 
@@ -53,13 +52,7 @@ namespace AillieoUtils.EasyLogger
             warnicon = new GUIContent(TextureAssets.Base64ToTexture(TextureAssets.warnicon));
             erroricon = new GUIContent(TextureAssets.Base64ToTexture(TextureAssets.erroricon));
 
-            //for (int i = 0; i < 200; ++ i)
-            //{
-            //    records.Add(new LogItem { logLevel = LogLevel.Log, message = $"Log - <{i}>" });
-            //    records.Add(new LogItem { logLevel = LogLevel.Debug, message = $"Debug - <{i}>" });
-            //    records.Add(new LogItem { logLevel = LogLevel.Warning, message = $"Warning - <{i}>" });
-            //    records.Add(new LogItem { logLevel = LogLevel.Error, message = $"Error - <{i}>" });
-            //}
+            SetSwitcherPosition();
         }
 
         public void OnGUI()
@@ -72,6 +65,15 @@ namespace AillieoUtils.EasyLogger
             switcherRect = GUI.Window(0, switcherRect, DrawSwitcher, string.Empty, guiStyleWindow);
         }
 
+        internal void SetSwitcherPosition(int horizontal = 0, int vertical = 0)
+        {
+            float xMin = - switcherRect.width / 2 + switcherBorder;
+            float yMin = - switcherRect.height / 2 + switcherBorder;
+            float xMax = Screen.width + switcherRect.width / 2 - switcherBorder;
+            float yMax = Screen.height + switcherRect.height / 2 - switcherBorder;
+            switcherRect.center = new Vector2(Mathf.Lerp(xMin, xMax, horizontal / 2f), Mathf.Lerp(yMin, yMax, vertical / 2f));
+        }
+
         private void DrawLogItems()
         {
             GUILayout.BeginArea(new Rect(0, 0, Screen.width, Screen.height), guiStyleWindow);
@@ -79,7 +81,6 @@ namespace AillieoUtils.EasyLogger
             GUILayout.BeginHorizontal();
             if (GUILayout.Button("Clear", guiStyleButton))
             {
-                Event.current.Use();
                 if (records.Count > 0)
                 {
                     dirty = true;
@@ -89,7 +90,6 @@ namespace AillieoUtils.EasyLogger
 
             if (GUILayout.Button("Copy", guiStyleButton))
             {
-                Event.current.Use();
                 GUIUtility.systemCopyBuffer = string.Concat(recordsDisplay.Select(r => r.message));
             }
 
@@ -157,7 +157,10 @@ namespace AillieoUtils.EasyLogger
 
         private void DrawSwitcher(int windowId)
         {
-            if (GUI.Button(buttonRect, "EL", guiStyleButton))
+            Rect excludeBorder = new Rect(
+                Vector2.zero + switcherBorder * Vector2.one,
+                switcherRect.size - 2 * switcherBorder * Vector2.one);
+            if (GUI.Button(excludeBorder, "EL", guiStyleButton))
             {
                 drawLogItems = !drawLogItems;
             }
