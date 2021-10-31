@@ -14,7 +14,6 @@ namespace AillieoUtils.EasyLogger
                 return;
             }
 
-            Logger.receiveUnityLogEvents = config.receiveUnityLogEvents;
             Logger.sharedFilter = config.filter;
             if (config.imGuiAppender)
             {
@@ -28,6 +27,8 @@ namespace AillieoUtils.EasyLogger
             {
                 Logger.sharedAppenders.Add(new UnityConsoleAppender());
             }
+
+            Logger.receiveUnityLogEvents = config.receiveUnityLogEvents;
         }
 
         private static readonly Dictionary<string, Logger> cachedInstances = new Dictionary<string, Logger>();
