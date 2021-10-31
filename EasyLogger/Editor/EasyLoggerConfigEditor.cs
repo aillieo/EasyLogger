@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.IO;
 using UnityEditor;
 using UnityEngine;
 
@@ -21,18 +20,18 @@ namespace AillieoUtils.EasyLogger
 
         private static void OnGUI(string searchContext)
         {
-            EditorGUILayout.BeginVertical(EditorStyles.helpBox);
+            EasyLoggerConfig.GetConfig();
 
-            EditorGUILayout.LabelField("EasyLogger:");
+            EasyLoggerConfig config = EasyLoggerConfig.GetConfig();
+            SerializedObject serializedObject = new SerializedObject(config);
 
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("receiveUnityLogEvents"));
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("filter"));
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("imGuiAppender"));
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("fileAppender"));
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("unityConsoleAppender"));
 
-
-            EditorGUILayout.EndVertical();
-        }
-
-        private static string GetConfigPath()
-        {
-            return Path.Combine(UnityEngine.Application.dataPath, "EasyLogger.json");
+            serializedObject.ApplyModifiedProperties();
         }
     }
 }

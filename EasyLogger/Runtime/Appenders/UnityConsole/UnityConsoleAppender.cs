@@ -27,6 +27,8 @@ namespace AillieoUtils.EasyLogger
 
         private void UnityConsoleLog(LogLevel logLevel, string message)
         {
+            message = ConsoleHyperlinkWrapper.Wrap(message);
+
             switch (logLevel)
             {
             case LogLevel.Warning:

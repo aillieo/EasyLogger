@@ -40,8 +40,8 @@ namespace AillieoUtils.EasyLogger
             }
         }
 
+        internal static LogLevel sharedFilter = LogLevel.Any;
         private LogLevel? instanceFilter = null;
-        public static LogLevel sharedFilter = LogLevel.Any;
 
         public LogLevel filter
         {
@@ -61,11 +61,15 @@ namespace AillieoUtils.EasyLogger
             }
         }
 
-        private static readonly List<IAppender> sharedAppenders = new List<IAppender>();
+        internal static readonly List<IAppender> sharedAppenders = new List<IAppender>();
         private List<IAppender> appenders = null;
 
         public void AddAppender(IAppender appender)
         {
+            if (this.appenders == null)
+            {
+                this.appenders = new List<IAppender>(sharedAppenders);
+            }
             appenders.Add(appender);
         }
 
@@ -137,7 +141,7 @@ namespace AillieoUtils.EasyLogger
 
         private static void OnUnityLogEvent(string condition, string stackTrace, LogType type)
         {
-            Logger logger = LoggerFactory.GetLogger("Unity");
+            Logger logger = LoggerFactory.GetLogger("UnityEngine.Debug");
             switch (type)
             {
             case LogType.Warning:
