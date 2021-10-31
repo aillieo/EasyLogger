@@ -5,6 +5,31 @@ namespace AillieoUtils.EasyLogger
 {
     public static class LoggerFactory
     {
+        static LoggerFactory()
+        {
+            EasyLoggerConfig config = EasyLoggerConfig.GetConfig();
+            if (config == null)
+            {
+                UnityEngine.Debug.LogWarning("EasyLogger: config asset not found");
+                return;
+            }
+
+            Logger.receiveUnityLogEvents = config.receiveUnityLogEvents;
+            Logger.sharedFilter = config.filter;
+            if (config.imGuiAppender)
+            {
+                Logger.sharedAppenders.Add(new IMGUIAppender());
+            }
+            if (config.fileAppender)
+            {
+                Logger.sharedAppenders.Add(new FileAppender());
+            }
+            if (config.unityConsoleAppender)
+            {
+                Logger.sharedAppenders.Add(new UnityConsoleAppender());
+            }
+        }
+
         private static readonly Dictionary<string, Logger> cachedInstances = new Dictionary<string, Logger>();
 
         public static Logger GetLogger(string name)
@@ -20,7 +45,7 @@ namespace AillieoUtils.EasyLogger
 
         public static Logger GetLogger<T>()
         {
-            return GetLogger(typeof(T).Name);
+            return GetLogger(typeof(T).FullName);
         }
     }
 }
