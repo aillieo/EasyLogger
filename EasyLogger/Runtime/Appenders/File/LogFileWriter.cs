@@ -13,8 +13,22 @@ namespace AillieoUtils.EasyLogger
 
         internal LogFileWriter()
         {
-            string path = Path.Combine(Application.dataPath, "..", $"{DateTime.Now:yyyyMMddHHmmssfff}.log");
+            string folder = GetLogFolder();
+            if (!Directory.Exists(folder))
+            {
+                Directory.CreateDirectory(folder);
+            }
+
+            string path = Path.Combine(folder, $"{DateTime.Now:yyyyMMddHHmmssfff}.log");
             fileInfo = new FileInfo(path);
+        }
+
+        private string GetLogFolder()
+        {
+#if UNITY_EDITOR
+            return Path.Combine(Application.dataPath, "..", "Logs");
+#endif
+            return Application.consoleLogPath;
         }
 
         internal void Dispose()
