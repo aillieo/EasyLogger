@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
 using UnityEngine;
 
 namespace AillieoUtils.EasyLogger
@@ -91,11 +93,20 @@ namespace AillieoUtils.EasyLogger
             appenders.Remove(appender);
         }
 
-        public void RemoveAllAppenders()
+        public void RemoveAppender<T>() where T : IAppender
         {
             if (this.appenders == null)
             {
                 this.appenders = new List<IAppender>(sharedAppenders);
+            }
+            appenders.RemoveAll(a => a is T);
+        }
+
+        public void RemoveAllAppenders()
+        {
+            if (this.appenders == null)
+            {
+                this.appenders = new List<IAppender>();
             }
             appenders.Clear();
         }
@@ -120,8 +131,16 @@ namespace AillieoUtils.EasyLogger
             LogWithFilter(LogLevel.Error, message);
         }
 
+        private static int internalCall = 0;
         private void LogWithFilter(LogLevel logLevel, object message)
         {
+            if (internalCall > 0)
+            {
+                return;
+            }
+
+            internalCall++;
+
             if ((this.filter & logLevel) > 0)
             {
                 foreach (var appender in appenders ?? sharedAppenders)
@@ -129,7 +148,13 @@ namespace AillieoUtils.EasyLogger
                     try
                     {
                         IFormatter formatter = appender.formatter ?? defaultFormatter;
-                        LogItem logItem = new LogItem() { logLevel = logLevel, message = formatter.Format(message) };
+                        LogItem logItem = new LogItem()
+                        {
+                            logger = name,
+                            logLevel = logLevel,
+                            message = formatter.Format(name, logLevel, message, DateTime.Now, Thread.CurrentThread.ManagedThreadId, string.Empty),
+                            unityContext = null,
+                        };
                         appender.OnReceiveLogItem(ref logItem);
                     }
                     catch
@@ -137,11 +162,15 @@ namespace AillieoUtils.EasyLogger
                     }
                 }
             }
+
+            internalCall--;
         }
 
         private static void OnUnityLogEvent(string condition, string stackTrace, LogType type)
         {
             Logger logger = LoggerFactory.GetLogger("UnityEngine.Debug");
+            logger.RemoveAppender<UnityConsoleAppender>();
+
             switch (type)
             {
             case LogType.Warning:

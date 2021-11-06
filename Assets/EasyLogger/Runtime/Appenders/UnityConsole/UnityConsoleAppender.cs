@@ -2,7 +2,7 @@ namespace AillieoUtils.EasyLogger
 {
     public class UnityConsoleAppender : IAppender
     {
-        public IFormatter formatter { get; set; }
+        public IFormatter formatter { get; set; } = new UnityConsoleLogFormatter();
 
         private int internalCall = 0;
 
@@ -27,8 +27,6 @@ namespace AillieoUtils.EasyLogger
 
         private void UnityConsoleLog(LogLevel logLevel, string message)
         {
-            message = ConsoleHyperlinkWrapper.Wrap(message);
-
             switch (logLevel)
             {
             case LogLevel.Warning:

@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using UnityEngine;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 namespace AillieoUtils.EasyLogger
 {
@@ -23,13 +26,22 @@ namespace AillieoUtils.EasyLogger
             fileInfo = new FileInfo(path);
         }
 
-        private string GetLogFolder()
+        private static string GetLogFolder()
         {
 #if UNITY_EDITOR
             return Path.Combine(Application.dataPath, "..", "Logs");
-#endif
+#else
             return Application.consoleLogPath;
+#endif
         }
+
+#if UNITY_EDITOR
+        [MenuItem("AillieoUtils/EasyLogger/LocateLogFolder", false, 0)]
+        private static void LocateLogFolder()
+        {
+            EditorUtility.RevealInFinder(GetLogFolder());
+        }
+#endif
 
         internal void Dispose()
         {

@@ -30,11 +30,15 @@ namespace AillieoUtils.EasyLogger
         }
 
 #if UNITY_EDITOR
-        [MenuItem("Assets/CopyBase64Info", false, 0)]
+        //[MenuItem("Assets/CopyBase64Info", false, 0)]
         public static void CopyBase64Info()
         {
             Debug.Log(Selection.activeObject);
-            GUIUtility.systemCopyBuffer = TextureToBase64(Selection.activeObject as Texture2D);
+            Texture2D texture = Selection.activeObject as Texture2D;
+            if (texture != null)
+            {
+                GUIUtility.systemCopyBuffer = TextureToBase64(texture);
+            }
         }
 #endif
     }
