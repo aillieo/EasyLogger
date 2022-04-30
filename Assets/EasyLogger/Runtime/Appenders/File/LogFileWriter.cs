@@ -36,7 +36,7 @@ namespace AillieoUtils.EasyLogger
         }
 
 #if UNITY_EDITOR
-        [MenuItem("AillieoUtils/EasyLogger/LocateLogFolder", false, 0)]
+        [MenuItem("AillieoUtils/EasyLogger/LocateLogFolder", false)]
         private static void LocateLogFolder()
         {
             EditorUtility.RevealInFinder(GetLogFolder());

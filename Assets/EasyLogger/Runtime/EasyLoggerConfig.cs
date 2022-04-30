@@ -12,14 +12,14 @@ namespace AillieoUtils.EasyLogger
     [Serializable]
     public class EasyLoggerConfig : ScriptableObject
     {
-        public bool receiveUnityLogEvents;
-        public LogLevel filter;
-        public bool imGuiAppender;
-        public bool fileAppender;
-        public bool unityConsoleAppender;
+        public bool receiveUnityLogEvents = true;
+        public LogLevel filter = LogLevel.Any;
+        public bool imGuiAppender = false;
+        public bool fileAppender = false;
+        public bool unityConsoleAppender = true;
 
         private static EasyLoggerConfig globalConfig;
-        private static readonly string defaultPath = "Assets/AillieoUtils/EasyLogger/Config.asset";
+        private static readonly string defaultPath = "Assets/AillieoUtils/EasyLoggerConfig.asset";
 
 #if UNITY_EDITOR
         private static void GetOrCreateAsset()
@@ -42,7 +42,7 @@ namespace AillieoUtils.EasyLogger
 
             if (config == null)
             {
-                throw new Exception("");
+                throw new Exception($"Failed to create asset {nameof(EasyLoggerConfig)}");
             }
 
             List<UnityEngine.Object> preloadedAssets = PlayerSettings.GetPreloadedAssets().ToList();
