@@ -2,24 +2,29 @@ namespace AillieoUtils.EasyLogger
 {
     public static class ObjectExtensions
     {
-        public static void Debug<T>(this T obj, object message)
+        public static Logger GetLogger<T>(this T obj)
         {
-            LoggerFactory.GetLogger<T>().Debug(message);
+            return LoggerFactory.GetLogger<T>();
         }
 
-        public static void Log<T>(this T obj, object message)
+        public static void LogDebug(this object obj, object message)
         {
-            LoggerFactory.GetLogger<T>().Log(message);
+            obj.GetLogger().Debug(message);
         }
 
-        public static void Warning<T>(this T obj, object message)
+        public static void Log(this object obj, object message)
         {
-            LoggerFactory.GetLogger<T>().Warning(message);
+            obj.GetLogger().Log(message);
         }
 
-        public static void Error<T>(this T obj, object message)
+        public static void LogWarning(this object obj, object message)
         {
-            LoggerFactory.GetLogger<T>().Error(message);
+            obj.GetLogger().Warning(message);
+        }
+
+        public static void LogError(this object obj, object message)
+        {
+            obj.GetLogger().Error(message);
         }
     }
 }

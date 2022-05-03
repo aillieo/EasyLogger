@@ -18,11 +18,12 @@ namespace AillieoUtils.EasyLogger
         private GUIStyle guiStyleButtonSmall;
         private GUIStyle guiStyleTextField;
         private GUILayoutOption[] guiOptionsButtonSmall = new GUILayoutOption[] { GUILayout.Width(100) };
+        private GUIContent logoicon;
         private GUIContent infoicon;
         private GUIContent warnicon;
         private GUIContent erroricon;
 
-        private Rect switcherRect = new Rect(0, 0, 100, 80);
+        private Rect switcherRect = new Rect(0, 0, 100, 100);
         private int switcherBorder = 20;
         private Vector2 scrollPosition = Vector2.zero;
         private bool dirty = false;
@@ -48,6 +49,7 @@ namespace AillieoUtils.EasyLogger
             guiStyleLog = new GUIStyle("label");
             guiStyleLog.fontSize = 25;
 
+            logoicon = new GUIContent(TextureAssets.Base64ToTexture(TextureAssets.logo));
             infoicon = new GUIContent(TextureAssets.Base64ToTexture(TextureAssets.infoicon));
             warnicon = new GUIContent(TextureAssets.Base64ToTexture(TextureAssets.warnicon));
             erroricon = new GUIContent(TextureAssets.Base64ToTexture(TextureAssets.erroricon));
@@ -160,7 +162,7 @@ namespace AillieoUtils.EasyLogger
             Rect excludeBorder = new Rect(
                 Vector2.zero + switcherBorder * Vector2.one,
                 switcherRect.size - 2 * switcherBorder * Vector2.one);
-            if (GUI.Button(excludeBorder, "EL", guiStyleButton))
+            if (GUI.Button(excludeBorder, logoicon, guiStyleButton))
             {
                 drawLogItems = !drawLogItems;
             }
