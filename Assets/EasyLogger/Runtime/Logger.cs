@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using UnityEngine;
@@ -143,6 +144,9 @@ namespace AillieoUtils.EasyLogger
 
             if ((this.filter & logLevel) > 0)
             {
+                DateTime dateTime = DateTime.Now;
+                int threadId = Thread.CurrentThread.ManagedThreadId;
+                string stackTrace = new StackTrace(3, true).ToString();
                 foreach (var appender in appenders ?? sharedAppenders)
                 {
                     try
@@ -152,7 +156,13 @@ namespace AillieoUtils.EasyLogger
                         {
                             logger = name,
                             logLevel = logLevel,
-                            message = formatter.Format(name, logLevel, message, DateTime.Now, Thread.CurrentThread.ManagedThreadId, string.Empty),
+                            message = formatter.Format(
+                                name,
+                                logLevel,
+                                message,
+                                dateTime,
+                                threadId,
+                                stackTrace),
                             unityContext = null,
                         };
                         appender.OnReceiveLogItem(ref logItem);

@@ -6,14 +6,7 @@ namespace AillieoUtils.EasyLogger
     {
         public string Format(string logger, LogLevel logLevel, object message, DateTime time, int thread, string stackTrace)
         {
-            if (string.IsNullOrWhiteSpace(stackTrace))
-            {
-                return $"[{time}][{LogLevelToChar(ref logLevel)}]{logger} {thread}{Environment.NewLine}{message}";
-            }
-            else
-            {
-                return $"[{time}][{LogLevelToChar(ref logLevel)}]{logger} {thread}{Environment.NewLine}{message}{Environment.NewLine}{stackTrace}";
-            }
+            return $"[{time}][{LogLevelToChar(ref logLevel)}]{logger} {thread}{Environment.NewLine}{message}{stackTrace}";
         }
 
         private char LogLevelToChar(ref LogLevel logLevel)
