@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
@@ -5,31 +6,43 @@ using UnityEngine;
 
 namespace AillieoUtils.EasyLogger
 {
-    internal class EasyLoggerConfigEditor
+    [CustomEditor(typeof(EasyLoggerConfig))]
+    internal class EasyLoggerConfigEditor : Editor
     {
-        [SettingsProvider]
-        private static SettingsProvider CreateSettingsProvider()
+        private static readonly string[] presets = new string[]
         {
-            return new SettingsProvider("AillieoUtils/EasyLogger", SettingsScope.Project)
+            "Editor", "Debug", "Release",
+        };
+
+        private int tab = 0;
+
+        public override void OnInspectorGUI()
+        {
+            tab = GUILayout.Toolbar(tab, presets);
+            SerializedProperty selected = null;
+            switch (tab)
             {
-                label = "EasyLogger",
-                guiHandler = OnGUI,
-                keywords = new HashSet<string>(new[] { "Aillieo", "Log", }),
-            };
-        }
+                case 0:
+                    selected = serializedObject.FindProperty("editorConfig");
+                    break;
+                case 1:
+                    selected = serializedObject.FindProperty("debugConfig");
+                    break;
+                case 2:
+                    selected = serializedObject.FindProperty("releaseConfig");
+                    break;
+                default:
+                    throw new NotImplementedException();
+            }
 
-        private static void OnGUI(string searchContext)
-        {
-            EasyLoggerConfig.GetConfig();
-
-            EasyLoggerConfig config = EasyLoggerConfig.GetConfig();
-            SerializedObject serializedObject = new SerializedObject(config);
-
-            EditorGUILayout.PropertyField(serializedObject.FindProperty("receiveUnityLogEvents"));
-            EditorGUILayout.PropertyField(serializedObject.FindProperty("filter"));
-            EditorGUILayout.PropertyField(serializedObject.FindProperty("imGuiAppender"));
-            EditorGUILayout.PropertyField(serializedObject.FindProperty("fileAppender"));
-            EditorGUILayout.PropertyField(serializedObject.FindProperty("unityConsoleAppender"));
+            IEnumerator enumerator = selected.GetEnumerator();
+            while (enumerator.MoveNext())
+            {
+                if (enumerator.Current is SerializedProperty prop)
+                {
+                    EditorGUILayout.PropertyField(prop);
+                }
+            }
 
             serializedObject.ApplyModifiedProperties();
         }

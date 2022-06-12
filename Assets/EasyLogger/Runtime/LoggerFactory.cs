@@ -7,12 +7,7 @@ namespace AillieoUtils.EasyLogger
     {
         static LoggerFactory()
         {
-            EasyLoggerConfig config = EasyLoggerConfig.GetConfig();
-            if (config == null)
-            {
-                UnityEngine.Debug.LogWarning("EasyLogger: config asset not found");
-                return;
-            }
+            ConfigEntry config = EasyLoggerConfig.GetConfig();
 
             Logger.sharedFilter = config.filter;
             if (config.imGuiAppender)

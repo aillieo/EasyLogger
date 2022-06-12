@@ -7,6 +7,13 @@
       "dependencies": {},
       "hash": "d7e4ce43b0cc849eb4e53068e52e93942c8fc6c3"
     },
+    "com.aillieo.unity-singleton": {
+      "version": "https://github.com/aillieo/UnitySingleton.git#upm",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "d992922e329738b25e644bdf16c956db0de07016"
+    },
     "com.unity.ext.nunit": {
       "version": "1.0.0",
       "depth": 1,
@@ -25,21 +32,6 @@
       },
       "url": "https://packages.unity.com"
     },
-    "com.unity.ugui": {
-      "version": "1.0.0",
-      "depth": 0,
-      "source": "builtin",
-      "dependencies": {
-        "com.unity.modules.ui": "1.0.0",
-        "com.unity.modules.imgui": "1.0.0"
-      }
-    },
-    "com.unity.modules.imageconversion": {
-      "version": "1.0.0",
-      "depth": 1,
-      "source": "builtin",
-      "dependencies": {}
-    },
     "com.unity.modules.imgui": {
       "version": "1.0.0",
       "depth": 0,
@@ -48,21 +40,7 @@
     },
     "com.unity.modules.jsonserialize": {
       "version": "1.0.0",
-      "depth": 0,
-      "source": "builtin",
-      "dependencies": {}
-    },
-    "com.unity.modules.screencapture": {
-      "version": "1.0.0",
-      "depth": 0,
-      "source": "builtin",
-      "dependencies": {
-        "com.unity.modules.imageconversion": "1.0.0"
-      }
-    },
-    "com.unity.modules.ui": {
-      "version": "1.0.0",
-      "depth": 0,
+      "depth": 1,
       "source": "builtin",
       "dependencies": {}
     }

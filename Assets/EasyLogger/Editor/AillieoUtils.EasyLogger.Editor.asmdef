@@ -3,7 +3,8 @@
     "references": [
         "AillieoUtils.EasyLogger",
         "AillieoUtils.FileUtils",
-        "AillieoUtils.FileUtils.Editor"
+        "AillieoUtils.FileUtils.Editor",
+        "AillieoUtils.UnitySingleton"
     ],
     "includePlatforms": [
         "Editor"

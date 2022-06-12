@@ -146,7 +146,8 @@ namespace AillieoUtils.EasyLogger
             {
                 DateTime dateTime = DateTime.Now;
                 int threadId = Thread.CurrentThread.ManagedThreadId;
-                string stackTrace = new StackTrace(3, true).ToString();
+                string stackTrace = (logLevel & LogLevel.Error) > 0 ?
+                    new StackTrace(3, true).ToString() : string.Empty;
                 foreach (var appender in appenders ?? sharedAppenders)
                 {
                     try
