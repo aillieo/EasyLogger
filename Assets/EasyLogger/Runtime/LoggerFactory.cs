@@ -26,7 +26,7 @@ namespace AillieoUtils.EasyLogger
             Logger.receiveUnityLogEvents = config.receiveUnityLogEvents;
         }
 
-        private static readonly Dictionary<string, Logger> cachedInstances = new Dictionary<string, Logger>();
+        private static readonly Dictionary<string, Logger> cachedInstances = new Dictionary<string, Logger>(StringComparer.Ordinal);
 
         public static Logger GetLogger(string name)
         {

@@ -34,6 +34,8 @@ namespace AillieoUtils.EasyLogger
                     {
                         Application.logMessageReceived -= OnUnityLogEvent;
                         Application.logMessageReceived += OnUnityLogEvent;
+                        Logger logger = LoggerFactory.GetLogger<UnityEngine.Debug>();
+                        logger.RemoveAppender<UnityConsoleAppender>();
                     }
                     else
                     {
@@ -179,8 +181,7 @@ namespace AillieoUtils.EasyLogger
 
         private static void OnUnityLogEvent(string condition, string stackTrace, LogType type)
         {
-            Logger logger = LoggerFactory.GetLogger("UnityEngine.Debug");
-            logger.RemoveAppender<UnityConsoleAppender>();
+            Logger logger = LoggerFactory.GetLogger<UnityEngine.Debug>();
 
             switch (type)
             {

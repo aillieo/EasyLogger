@@ -52,7 +52,7 @@ namespace AillieoUtils.EasyLogger
 
 #if UNITY_EDITOR
             configEntry = Instance.editorConfig;
-#elif DEBUG
+#elif DEVELOPMENT_BUILD
             configEntry = Instance.debugConfig;
 #else
             configEntry = Instance.releaseConfig;

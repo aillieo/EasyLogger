@@ -1,4 +1,5 @@
 using System;
+using UnityEngine;
 
 namespace AillieoUtils.EasyLogger
 {
@@ -8,11 +9,11 @@ namespace AillieoUtils.EasyLogger
         {
             if (string.IsNullOrWhiteSpace(stackTrace))
             {
-                return ConsoleHyperlinkWrapper.Wrap(Convert.ToString(message));
+                return UnityConsoleHyperlinkWrapper.Wrap(Convert.ToString(message));
             }
             else
             {
-                return $"{ConsoleHyperlinkWrapper.Wrap(Convert.ToString(message))}{ConsoleHyperlinkWrapper.Wrap(Convert.ToString(stackTrace))}";
+                return $"{UnityConsoleHyperlinkWrapper.Wrap(Convert.ToString(message))}{UnityConsoleHyperlinkWrapper.Wrap(Convert.ToString(stackTrace))}";
             }
         }
     }

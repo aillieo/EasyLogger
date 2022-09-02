@@ -6,7 +6,7 @@ namespace AillieoUtils.EasyLogger
     {
         public string Format(string logger, LogLevel logLevel, object message, DateTime time, int thread, string stackTrace)
         {
-            return $"[{time}][{LogLevelToChar(ref logLevel)}]{logger} {thread}{Environment.NewLine}{message}{stackTrace}";
+            return $"[{time}]|{LogLevelToChar(ref logLevel)}|{logger}|{thread}|{message}{stackTrace}";
         }
 
         private char LogLevelToChar(ref LogLevel logLevel)
