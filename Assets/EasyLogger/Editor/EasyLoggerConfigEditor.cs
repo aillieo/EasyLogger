@@ -32,7 +32,7 @@ namespace AillieoUtils.EasyLogger
                     selected = serializedObject.FindProperty("releaseConfig");
                     break;
                 default:
-                    throw new NotImplementedException();
+                    throw new IndexOutOfRangeException();
             }
 
             IEnumerator enumerator = selected.GetEnumerator();
