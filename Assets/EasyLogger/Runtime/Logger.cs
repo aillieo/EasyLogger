@@ -9,22 +9,24 @@ namespace AillieoUtils.EasyLogger
 {
     public class Logger
     {
-        internal Logger(string name)
+        internal Logger(string moduleName)
         {
-            this.name = name;
+            this.moduleName = moduleName;
         }
 
-        private readonly string name;
+        private readonly string moduleName;
 
         private static readonly IFormatter defaultFormatter = new DefaultFormatter();
 
         private static bool isReceivingUnityLogEvents = false;
+
         public static bool receiveUnityLogEvents
         {
             get
             {
                 return isReceivingUnityLogEvents;
             }
+
             set
             {
                 if (isReceivingUnityLogEvents != value)
@@ -75,6 +77,7 @@ namespace AillieoUtils.EasyLogger
             {
                 this.appenders = new List<IAppender>(sharedAppenders);
             }
+
             appenders.Add(appender);
         }
 
@@ -84,6 +87,7 @@ namespace AillieoUtils.EasyLogger
             {
                 this.appenders = new List<IAppender>(sharedAppenders);
             }
+
             this.appenders.AddRange(appenders);
         }
 
@@ -93,6 +97,7 @@ namespace AillieoUtils.EasyLogger
             {
                 this.appenders = new List<IAppender>(sharedAppenders);
             }
+
             appenders.Remove(appender);
         }
 
@@ -102,6 +107,7 @@ namespace AillieoUtils.EasyLogger
             {
                 this.appenders = new List<IAppender>(sharedAppenders);
             }
+
             appenders.RemoveAll(a => a is T);
         }
 
@@ -111,7 +117,6 @@ namespace AillieoUtils.EasyLogger
             {
                 this.appenders = new List<IAppender>();
             }
-            appenders.Clear();
         }
 
         public void Debug(object message)
@@ -157,10 +162,10 @@ namespace AillieoUtils.EasyLogger
                         IFormatter formatter = appender.formatter ?? defaultFormatter;
                         LogItem logItem = new LogItem()
                         {
-                            logger = name,
+                            logger = moduleName,
                             logLevel = logLevel,
                             message = formatter.Format(
-                                name,
+                                moduleName,
                                 logLevel,
                                 message,
                                 dateTime,

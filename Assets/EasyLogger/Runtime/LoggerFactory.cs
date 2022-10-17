@@ -5,6 +5,8 @@ namespace AillieoUtils.EasyLogger
 {
     public static class LoggerFactory
     {
+        private static readonly Dictionary<string, Logger> cachedInstances = new Dictionary<string, Logger>(StringComparer.Ordinal);
+
         static LoggerFactory()
         {
             ConfigEntry config = EasyLoggerConfig.GetConfig();
@@ -14,10 +16,12 @@ namespace AillieoUtils.EasyLogger
             {
                 Logger.sharedAppenders.Add(new IMGUIAppender());
             }
+
             if (config.fileAppender)
             {
                 Logger.sharedAppenders.Add(new FileAppender());
             }
+
             if (config.unityConsoleAppender)
             {
                 Logger.sharedAppenders.Add(new UnityConsoleAppender());
@@ -26,22 +30,25 @@ namespace AillieoUtils.EasyLogger
             Logger.receiveUnityLogEvents = config.receiveUnityLogEvents;
         }
 
-        private static readonly Dictionary<string, Logger> cachedInstances = new Dictionary<string, Logger>(StringComparer.Ordinal);
-
-        public static Logger GetLogger(string name)
+        public static Logger GetLogger(string moduleName)
         {
-            if (!cachedInstances.TryGetValue(name, out Logger instance))
+            if (!cachedInstances.TryGetValue(moduleName, out Logger instance))
             {
-                instance = new Logger(name);
-                cachedInstances.Add(name, instance);
+                instance = new Logger(moduleName);
+                cachedInstances.Add(moduleName, instance);
             }
 
             return instance;
         }
 
+        public static Logger GetLogger(Type type)
+        {
+            return GetLogger(type.FullName);
+        }
+
         public static Logger GetLogger<T>()
         {
-            return GetLogger(typeof(T).FullName);
+            return GetLogger(typeof(T));
         }
     }
 }
