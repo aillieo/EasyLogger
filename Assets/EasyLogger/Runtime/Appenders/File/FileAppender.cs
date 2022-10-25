@@ -34,7 +34,10 @@ namespace AillieoUtils.EasyLogger
         private static void OnSessionLaunch()
         {
             if (writer == null)
-            { writer = new LogFileWriter(); }
+            {
+                writer = new LogFileWriter();
+            }
+
             Application.quitting += OnApplicationQuit;
         }
 

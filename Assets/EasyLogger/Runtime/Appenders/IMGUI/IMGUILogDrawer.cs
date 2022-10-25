@@ -6,17 +6,37 @@ namespace AillieoUtils.EasyLogger
 {
     public class IMGUILogDrawer : MonoBehaviour
     {
+        private static class GUIStyles
+        {
+            public static GUIStyle guiStyleWindow;
+            public static GUIStyle guiStyleLog;
+            public static GUIStyle guiStyleButton;
+            public static GUIStyle guiStyleButtonSmall;
+            public static GUIStyle guiStyleTextField;
+
+            static GUIStyles()
+            {
+                guiStyleButton = new GUIStyle("button");
+                guiStyleButton.fontSize = 36;
+
+                guiStyleButtonSmall = new GUIStyle("button");
+
+                guiStyleTextField = new GUIStyle("textField");
+                guiStyleTextField.fontSize = 36;
+
+                guiStyleWindow = new GUIStyle("window");
+
+                guiStyleLog = new GUIStyle("label");
+                guiStyleLog.fontSize = 25;
+            }
+        }
+
         private bool drawLogItems = false;
         private readonly List<LogItem> records = new List<LogItem>();
         private IEnumerable<LogItem> recordsDisplay;
         private string textFilter = string.Empty;
         private LogLevel levelMask = LogLevel.Any;
 
-        private GUIStyle guiStyleWindow;
-        private GUIStyle guiStyleLog;
-        private GUIStyle guiStyleButton;
-        private GUIStyle guiStyleButtonSmall;
-        private GUIStyle guiStyleTextField;
         private GUILayoutOption[] guiOptionsButtonSmall = new GUILayoutOption[] { GUILayout.Width(100) };
         private GUIContent logoicon;
         private GUIContent infoicon;
@@ -36,19 +56,6 @@ namespace AillieoUtils.EasyLogger
 
         private void Awake()
         {
-            guiStyleButton = new GUIStyle("button");
-            guiStyleButton.fontSize = 36;
-
-            guiStyleButtonSmall = new GUIStyle("button");
-
-            guiStyleTextField = new GUIStyle("textField");
-            guiStyleTextField.fontSize = 36;
-
-            guiStyleWindow = new GUIStyle("window");
-
-            guiStyleLog = new GUIStyle("label");
-            guiStyleLog.fontSize = 25;
-
             logoicon = new GUIContent(TextureAssets.Base64ToTexture(TextureAssets.logo));
             infoicon = new GUIContent(TextureAssets.Base64ToTexture(TextureAssets.infoicon));
             warnicon = new GUIContent(TextureAssets.Base64ToTexture(TextureAssets.warnicon));
@@ -64,13 +71,13 @@ namespace AillieoUtils.EasyLogger
                 DrawLogItems();
             }
 
-            switcherRect = GUI.Window(0, switcherRect, DrawSwitcher, string.Empty, guiStyleWindow);
+            switcherRect = GUI.Window(0, switcherRect, DrawSwitcher, string.Empty, GUIStyles.guiStyleWindow);
         }
 
         internal void SetSwitcherPosition(int horizontal = 0, int vertical = 0)
         {
-            float xMin = - switcherRect.width / 2 + switcherBorder;
-            float yMin = - switcherRect.height / 2 + switcherBorder;
+            float xMin = -switcherRect.width / 2 + switcherBorder;
+            float yMin = -switcherRect.height / 2 + switcherBorder;
             float xMax = Screen.width + switcherRect.width / 2 - switcherBorder;
             float yMax = Screen.height + switcherRect.height / 2 - switcherBorder;
             switcherRect.center = new Vector2(Mathf.Lerp(xMin, xMax, horizontal / 2f), Mathf.Lerp(yMin, yMax, vertical / 2f));
@@ -78,10 +85,10 @@ namespace AillieoUtils.EasyLogger
 
         private void DrawLogItems()
         {
-            GUILayout.BeginArea(new Rect(0, 0, Screen.width, Screen.height), guiStyleWindow);
+            GUILayout.BeginArea(new Rect(0, 0, Screen.width, Screen.height), GUIStyles.guiStyleWindow);
 
             GUILayout.BeginHorizontal();
-            if (GUILayout.Button("Clear", guiStyleButton))
+            if (GUILayout.Button("Clear", GUIStyles.guiStyleButton))
             {
                 if (records.Count > 0)
                 {
@@ -90,7 +97,7 @@ namespace AillieoUtils.EasyLogger
                 }
             }
 
-            if (GUILayout.Button("Copy", guiStyleButton))
+            if (GUILayout.Button("Copy", GUIStyles.guiStyleButton))
             {
                 GUIUtility.systemCopyBuffer = string.Concat(recordsDisplay.Select(r => r.message));
             }
@@ -101,9 +108,9 @@ namespace AillieoUtils.EasyLogger
             bool displayWarning = (levelMask & LogLevel.Warning) > 0;
             bool displayError = (levelMask & LogLevel.Error) > 0;
 
-            displayInfo = GUILayout.Toggle(displayInfo, infoicon, guiStyleButtonSmall, guiOptionsButtonSmall);
-            displayWarning = GUILayout.Toggle(displayWarning, warnicon, guiStyleButtonSmall, guiOptionsButtonSmall);
-            displayError = GUILayout.Toggle(displayError, erroricon, guiStyleButtonSmall, guiOptionsButtonSmall);
+            displayInfo = GUILayout.Toggle(displayInfo, infoicon, GUIStyles.guiStyleButtonSmall, guiOptionsButtonSmall);
+            displayWarning = GUILayout.Toggle(displayWarning, warnicon, GUIStyles.guiStyleButtonSmall, guiOptionsButtonSmall);
+            displayError = GUILayout.Toggle(displayError, erroricon, GUIStyles.guiStyleButtonSmall, guiOptionsButtonSmall);
 
             LogLevel newLevelMask = LogLevel.None;
             if (displayInfo)
@@ -111,10 +118,12 @@ namespace AillieoUtils.EasyLogger
                 newLevelMask |= LogLevel.Log;
                 newLevelMask |= LogLevel.Debug;
             }
+
             if (displayWarning)
             {
                 newLevelMask |= LogLevel.Warning;
             }
+
             if (displayError)
             {
                 newLevelMask |= LogLevel.Error;
@@ -128,7 +137,7 @@ namespace AillieoUtils.EasyLogger
 
             GUILayout.EndHorizontal();
 
-            string newTextFilter = GUILayout.TextField(textFilter, guiStyleTextField);
+            string newTextFilter = GUILayout.TextField(textFilter, GUIStyles.guiStyleTextField);
             if (textFilter != newTextFilter)
             {
                 textFilter = newTextFilter;
@@ -149,7 +158,7 @@ namespace AillieoUtils.EasyLogger
 
             foreach (var s in recordsDisplay)
             {
-                GUILayout.Label(s.message, guiStyleLog);
+                GUILayout.Label(s.message, GUIStyles.guiStyleLog);
             }
 
             GUILayout.EndScrollView();
@@ -162,10 +171,11 @@ namespace AillieoUtils.EasyLogger
             Rect excludeBorder = new Rect(
                 Vector2.zero + switcherBorder * Vector2.one,
                 switcherRect.size - 2 * switcherBorder * Vector2.one);
-            if (GUI.Button(excludeBorder, logoicon, guiStyleButton))
+            if (GUI.Button(excludeBorder, logoicon, GUIStyles.guiStyleButton))
             {
                 drawLogItems = !drawLogItems;
             }
+
             GUI.DragWindow();
         }
     }

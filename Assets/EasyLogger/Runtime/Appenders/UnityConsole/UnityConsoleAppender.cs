@@ -1,6 +1,6 @@
 namespace AillieoUtils.EasyLogger
 {
-    public class UnityConsoleAppender : IAppender
+    public partial class UnityConsoleAppender : IAppender
     {
         public IFormatter formatter { get; set; } = new UnityConsoleLogFormatter();
 

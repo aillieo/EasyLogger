@@ -111,6 +111,16 @@ namespace AillieoUtils.EasyLogger
             appenders.RemoveAll(a => a is T);
         }
 
+        public void RemoveAppender(Type type)
+        {
+            if (this.appenders == null)
+            {
+                this.appenders = new List<IAppender>(sharedAppenders);
+            }
+
+            appenders.RemoveAll(a => type.IsAssignableFrom(a.GetType()));
+        }
+
         public void RemoveAllAppenders()
         {
             if (this.appenders == null)
@@ -154,7 +164,7 @@ namespace AillieoUtils.EasyLogger
                 DateTime dateTime = DateTime.Now;
                 int threadId = Thread.CurrentThread.ManagedThreadId;
                 string stackTrace = (logLevel & LogLevel.Error) > 0 ?
-                    new StackTrace(3, true).ToString() : string.Empty;
+                    StackTraceHelper.Extract(3) : string.Empty;
                 foreach (var appender in appenders ?? sharedAppenders)
                 {
                     try

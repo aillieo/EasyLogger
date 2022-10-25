@@ -10,21 +10,28 @@ namespace AillieoUtils.EasyLogger
 {
     public static class UnityConsoleLogLocator
     {
-        private static readonly string targetScript = "EasyLogger/Runtime/Logger.cs";
-        private static readonly int targetScriptInstanceId;
+        private static readonly string loggerScript = "EasyLogger/Runtime/Logger.cs";
+        private static readonly int loggerScriptInstanceId;
         private static readonly Regex regex = new Regex(@"\<a href=""([\S]+.cs)"" line=""([\d]+)""\>");
+        private static readonly string objectExtensionsScript = "EasyLogger/Runtime/Extensions/ObjectExtensions.cs";
+        private static readonly int objectExtensionsScriptInstanceId;
+        private static readonly Regex regex0 = new Regex(@"at ([\S]+.cs):([\d]+)");
 
         static UnityConsoleLogLocator()
         {
-            string targetPath = AssetDatabase.GetAllAssetPaths().FirstOrDefault(p => p.EndsWith(targetScript, StringComparison.InvariantCulture));
-            MonoScript scriptObj = AssetDatabase.LoadAssetAtPath<MonoScript>(targetPath);
-            targetScriptInstanceId = scriptObj.GetInstanceID();
+            string loggerScriptPath = AssetDatabase.GetAllAssetPaths().FirstOrDefault(p => p.EndsWith(loggerScript, StringComparison.InvariantCulture));
+            MonoScript loggerScriptObj = AssetDatabase.LoadAssetAtPath<MonoScript>(loggerScriptPath);
+            loggerScriptInstanceId = loggerScriptObj.GetInstanceID();
+
+            string objectExtensionsScriptPath = AssetDatabase.GetAllAssetPaths().FirstOrDefault(p => p.EndsWith(objectExtensionsScript, StringComparison.InvariantCulture));
+            MonoScript objectExtensionsScriptObj = AssetDatabase.LoadAssetAtPath<MonoScript>(objectExtensionsScriptPath);
+            objectExtensionsScriptInstanceId = objectExtensionsScriptObj.GetInstanceID();
         }
 
         [UnityEditor.Callbacks.OnOpenAsset(-1)]
         private static bool OnOpenAsset(int instanceID, int line)
         {
-            if (instanceID == targetScriptInstanceId)
+            if (instanceID == loggerScriptInstanceId)
             {
                 string activeText = GetConsoleActiveText();
                 if (string.IsNullOrWhiteSpace(activeText))
@@ -49,7 +56,42 @@ namespace AillieoUtils.EasyLogger
                     string filename = match.Groups[1].Value;
                     int.TryParse(match.Groups[2].Value, out var fileLine);
 
-                    filename = filename.Replace("\\", "/").Replace(Application.dataPath, "Assets/");
+                    //filename = filename.Replace("\\", "/").Replace(Application.dataPath, "Assets/");
+
+                    UnityEngine.Object uobj = AssetDatabase.LoadAssetAtPath<UnityEngine.Object>(filename);
+                    if (uobj == null)
+                    {
+                        continue;
+                    }
+
+                    AssetDatabase.OpenAsset(uobj, fileLine);
+                    return true;
+                }
+            }
+            else if (instanceID == objectExtensionsScriptInstanceId)
+            {
+                string activeText = GetConsoleActiveText();
+                if (string.IsNullOrWhiteSpace(activeText))
+                {
+                    return false;
+                }
+
+                string[] lines = activeText.Split('\n');
+                foreach (string oneLine in lines)
+                {
+                    Match match = regex0.Match(oneLine);
+                    if (!match.Success)
+                    {
+                        continue;
+                    }
+                    
+                    if (match.Groups.Count < 3)
+                    {
+                        continue;
+                    }
+
+                    string filename = match.Groups[1].Value;
+                    int.TryParse(match.Groups[2].Value, out var fileLine);
 
                     UnityEngine.Object uobj = AssetDatabase.LoadAssetAtPath<UnityEngine.Object>(filename);
                     if (uobj == null)
