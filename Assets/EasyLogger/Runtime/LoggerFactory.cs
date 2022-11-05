@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Net;
 
 namespace AillieoUtils.EasyLogger
 {
@@ -7,24 +8,28 @@ namespace AillieoUtils.EasyLogger
     {
         private static readonly Dictionary<string, Logger> cachedInstances = new Dictionary<string, Logger>(StringComparer.Ordinal);
 
-        static LoggerFactory()
+        public static void Init()
         {
             ConfigEntry config = EasyLoggerConfig.GetConfig();
 
             Logger.sharedFilter = config.filter;
             if (config.imGuiAppender)
             {
-                Logger.sharedAppenders.Add(new IMGUIAppender());
+                IMGUIAppender imGuiAppender = new IMGUIAppender();
+                imGuiAppender.switcherAlignment = config.imGuiSwitcherAlignment;
+                Logger.sharedAppenders.Add(imGuiAppender);
             }
 
             if (config.fileAppender)
             {
-                Logger.sharedAppenders.Add(new FileAppender());
+                FileAppender fileAppender = new FileAppender(config.maxFileCountKept, config.maxDaysKept);
+                Logger.sharedAppenders.Add(fileAppender);
             }
 
             if (config.unityConsoleAppender)
             {
-                Logger.sharedAppenders.Add(new UnityConsoleAppender());
+                UnityConsoleAppender unityConsoleAppender = new UnityConsoleAppender();
+                Logger.sharedAppenders.Add(unityConsoleAppender);
             }
 
             Logger.receiveUnityLogEvents = config.receiveUnityLogEvents;

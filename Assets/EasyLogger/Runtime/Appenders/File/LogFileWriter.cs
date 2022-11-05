@@ -1,49 +1,18 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
-using UnityEngine;
-#if UNITY_EDITOR
-using UnityEditor;
-#endif
 
 namespace AillieoUtils.EasyLogger
 {
     public class LogFileWriter
     {
-        FileInfo fileInfo = null;
-        StreamWriter streamWriter = null;
+        private FileInfo fileInfo = null;
+        private StreamWriter streamWriter = null;
 
-        internal LogFileWriter()
+        internal LogFileWriter(string path)
         {
-            string folder = GetLogFolder();
-
-            if (!Directory.Exists(folder))
-            {
-                Directory.CreateDirectory(folder);
-            }
-
-            string path = Path.Combine(folder, $"{DateTime.Now:yyyyMMddHHmmssfff}.log");
-
             fileInfo = new FileInfo(path);
         }
-
-        private static string GetLogFolder()
-        {
-#if UNITY_EDITOR
-            return Path.Combine(Application.dataPath, "..", "Logs");
-#else
-            return Path.GetDirectoryName(Application.consoleLogPath);
-#endif
-        }
-
-#if UNITY_EDITOR
-        [MenuItem("AillieoUtils/EasyLogger/LocateLogFolder", false)]
-        private static void LocateLogFolder()
-        {
-            EditorUtility.RevealInFinder(GetLogFolder());
-        }
-#endif
 
         internal void Dispose()
         {
@@ -75,18 +44,17 @@ namespace AillieoUtils.EasyLogger
 
         private bool EnsureWriter()
         {
+            if (fileInfo == null)
+            {
+                return false;
+            }
+
             if (streamWriter == null)
             {
-                if (fileInfo == null)
-                {
-                    return false;
-                }
-                else
-                {
-                    // FileUtils.Roller.FileRoll("");
-                    streamWriter = fileInfo.CreateText();
-                }
+                streamWriter = fileInfo.CreateText();
+                streamWriter.AutoFlush = true;
             }
+
             return true;
         }
     }

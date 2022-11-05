@@ -1,7 +1,9 @@
-using UnityEngine;
+using System;
+using System.IO;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
+using UnityEngine;
 
 namespace AillieoUtils.EasyLogger
 {
@@ -9,7 +11,7 @@ namespace AillieoUtils.EasyLogger
     {
         public IFormatter formatter { get; set; }
 
-        private static LogFileWriter writer;
+        private LogFileWriter writer;
 
         public void OnReceiveLogItem(ref LogItem logItem)
         {
@@ -21,7 +23,7 @@ namespace AillieoUtils.EasyLogger
             writer.AppendLogItem(ref logItem);
         }
 
-        private static void OnApplicationQuit()
+        private void OnApplicationQuit()
         {
             if (writer != null)
             {
@@ -30,38 +32,50 @@ namespace AillieoUtils.EasyLogger
             }
         }
 
-        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
-        private static void OnSessionLaunch()
+        private static string GetLogFolder()
         {
-            if (writer == null)
-            {
-                writer = new LogFileWriter();
-            }
-
-            Application.quitting += OnApplicationQuit;
+#if UNITY_EDITOR
+            return Path.Combine(Application.dataPath, "..", "Logs");
+#else
+            return Path.Combine(Application.persistentDataPath, "Logs");
+#endif
         }
 
 #if UNITY_EDITOR
-        [InitializeOnLoadMethod]
-        private static void OnEditorLaunch()
+        [MenuItem("AillieoUtils/EasyLogger/LocateLogFolder", false)]
+        private static void LocateLogFolder()
         {
-            EditorApplication.playModeStateChanged += (state) =>
-            {
-                if (state == UnityEditor.PlayModeStateChange.ExitingEditMode)
-                {
-                    OnEditorApplicationQuit();
-                }
-            };
-        }
-
-        private static void OnEditorApplicationQuit()
-        {
-            if (writer != null)
-            {
-                writer.Dispose();
-                writer = null;
-            }
+            EditorUtility.RevealInFinder(GetLogFolder());
         }
 #endif
+
+        public FileAppender(int maxFileCountKept, int maxDaysKept)
+        {
+            try
+            {
+                string folder = GetLogFolder();
+
+                if (!Directory.Exists(folder))
+                {
+                    Directory.CreateDirectory(folder);
+                }
+
+                var rollConfig = FileUtils.Roller.RollConfig.Default;
+                rollConfig.maxFileCount = maxFileCountKept;
+                FileUtils.Roller.FileRoll(folder, rollConfig);
+
+                string path = Path.Combine(folder, $"{DateTime.Now:yyyyMMddHHmmssfff}.log");
+
+                writer = new LogFileWriter(path);
+            }
+            catch (Exception e)
+            {
+                UnityEngine.Debug.LogException(e);
+            }
+            finally
+            {
+                ApplicationEvents.onApplicationQuit += OnApplicationQuit;
+            }
+        }
     }
 }

@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace AillieoUtils.EasyLogger
 {
-    public static class UnityConsoleLogLocator
+    internal static class UnityConsoleLogLocator
     {
         private static readonly string loggerScript = "EasyLogger/Runtime/Logger.cs";
         private static readonly int loggerScriptInstanceId;
@@ -56,8 +56,6 @@ namespace AillieoUtils.EasyLogger
                     string filename = match.Groups[1].Value;
                     int.TryParse(match.Groups[2].Value, out var fileLine);
 
-                    //filename = filename.Replace("\\", "/").Replace(Application.dataPath, "Assets/");
-
                     UnityEngine.Object uobj = AssetDatabase.LoadAssetAtPath<UnityEngine.Object>(filename);
                     if (uobj == null)
                     {
@@ -84,7 +82,7 @@ namespace AillieoUtils.EasyLogger
                     {
                         continue;
                     }
-                    
+
                     if (match.Groups.Count < 3)
                     {
                         continue;

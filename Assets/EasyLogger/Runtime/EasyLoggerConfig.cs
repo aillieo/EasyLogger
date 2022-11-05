@@ -4,12 +4,18 @@ using UnityEngine;
 namespace AillieoUtils.EasyLogger
 {
     [Serializable]
-    public struct ConfigEntry
+    public class ConfigEntry
     {
         public bool receiveUnityLogEvents;
         public LogLevel filter;
+
         public bool imGuiAppender;
+        public IMGUIAppender.Alignment imGuiSwitcherAlignment = IMGUIAppender.Alignment.TopLeft;
+
         public bool fileAppender;
+        public int maxFileCountKept = 100;
+        public int maxDaysKept = 30;
+
         public bool unityConsoleAppender;
     }
 
@@ -59,6 +65,12 @@ namespace AillieoUtils.EasyLogger
 #endif
 
             return configEntry;
+        }
+
+        protected override void Awake()
+        {
+            base.Awake();
+            LoggerFactory.Init();
         }
     }
 }

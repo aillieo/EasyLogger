@@ -6,6 +6,21 @@ namespace AillieoUtils.EasyLogger
     {
         public IFormatter formatter { get; set; }
 
+        private Alignment switcherAlignmentValue = Alignment.TopLeft;
+
+        public Alignment switcherAlignment
+        {
+            get => switcherAlignment;
+            set
+            {
+                if (switcherAlignmentValue != value)
+                {
+                    switcherAlignmentValue = value;
+                    SetSwitcherWidgetPosition(switcherAlignmentValue);
+                }
+            }
+        }
+
         public void OnReceiveLogItem(ref LogItem logItem)
         {
             EnsureInstance();
@@ -25,7 +40,7 @@ namespace AillieoUtils.EasyLogger
             BottomRight =   0b0010 | 0b1000,
         }
 
-        public void SetSwitcherWidgetPosition(Alignment alignment)
+        private void SetSwitcherWidgetPosition(Alignment alignment)
         {
             EnsureInstance();
             int horizontal = (int)alignment & 0b11;

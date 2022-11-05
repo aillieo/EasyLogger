@@ -35,13 +35,34 @@ namespace AillieoUtils.EasyLogger
                     throw new IndexOutOfRangeException();
             }
 
-            IEnumerator enumerator = selected.GetEnumerator();
-            while (enumerator.MoveNext())
+            EditorGUILayout.PropertyField(selected.FindPropertyRelative(nameof(ConfigEntry.receiveUnityLogEvents)));
+            EditorGUILayout.PropertyField(selected.FindPropertyRelative(nameof(ConfigEntry.filter)));
+
+            SerializedProperty imGuiAppender = selected.FindPropertyRelative(nameof(ConfigEntry.imGuiAppender));
+            EditorGUILayout.PropertyField(imGuiAppender);
+            if (imGuiAppender.boolValue)
             {
-                if (enumerator.Current is SerializedProperty prop)
-                {
-                    EditorGUILayout.PropertyField(prop);
-                }
+                EditorGUI.indentLevel++;
+                EditorGUILayout.PropertyField(selected.FindPropertyRelative(nameof(ConfigEntry.imGuiSwitcherAlignment)));
+                EditorGUI.indentLevel--;
+            }
+
+            SerializedProperty fileAppender = selected.FindPropertyRelative(nameof(ConfigEntry.fileAppender));
+            EditorGUILayout.PropertyField(fileAppender);
+            if (fileAppender.boolValue)
+            {
+                EditorGUI.indentLevel++;
+                EditorGUILayout.PropertyField(selected.FindPropertyRelative(nameof(ConfigEntry.maxFileCountKept)));
+                EditorGUILayout.PropertyField(selected.FindPropertyRelative(nameof(ConfigEntry.maxDaysKept)));
+                EditorGUI.indentLevel--;
+            }
+
+            SerializedProperty unityConsoleAppender = selected.FindPropertyRelative(nameof(ConfigEntry.unityConsoleAppender));
+            EditorGUILayout.PropertyField(unityConsoleAppender);
+            if (unityConsoleAppender.boolValue)
+            {
+                // EditorGUI.indentLevel++;
+                // EditorGUI.indentLevel--;
             }
 
             serializedObject.ApplyModifiedProperties();
