@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace AillieoUtils.EasyLogger
 {
-    public class IMGUILogDrawer : MonoBehaviour
+    public class IMGUILogDrawer : SingletonMonoBehaviour<IMGUILogDrawer>
     {
         private static class GUIStyles
         {
@@ -54,8 +54,10 @@ namespace AillieoUtils.EasyLogger
             dirty = true;
         }
 
-        private void Awake()
+        protected override void Awake()
         {
+            base.Awake();
+
             logoicon = new GUIContent(TextureAssets.Base64ToTexture(TextureAssets.logo));
             infoicon = new GUIContent(TextureAssets.Base64ToTexture(TextureAssets.infoicon));
             warnicon = new GUIContent(TextureAssets.Base64ToTexture(TextureAssets.warnicon));

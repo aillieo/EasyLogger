@@ -65,7 +65,22 @@ namespace AillieoUtils.EasyLogger
                 // EditorGUI.indentLevel--;
             }
 
+            SerializedProperty wsServerAppender = selected.FindPropertyRelative(nameof(ConfigEntry.wsServerAppender));
+            EditorGUILayout.PropertyField(wsServerAppender);
+            if (wsServerAppender.boolValue)
+            {
+                EditorGUI.indentLevel++;
+                EditorGUILayout.PropertyField(selected.FindPropertyRelative(nameof(ConfigEntry.remoteUri)));
+                EditorGUI.indentLevel--;
+            }
+
             serializedObject.ApplyModifiedProperties();
+        }
+
+        [MenuItem("AillieoUtils/EasyLogger/Settings")]
+        private static void OpenProjectSettings()
+        {
+            SettingsService.OpenProjectSettings(EasyLoggerConfig.settingsPath);
         }
     }
 }

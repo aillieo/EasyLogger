@@ -17,11 +17,16 @@ namespace AillieoUtils.EasyLogger
         public int maxDaysKept = 30;
 
         public bool unityConsoleAppender;
+
+        public bool wsServerAppender;
+        public string remoteUri = "ws://localhost:8080";
     }
 
-    [SettingsMenuPath("AillieoUtils/EasyLogger")]
+    [SettingsMenuPath(settingsPath)]
     public class EasyLoggerConfig : SingletonScriptableObject<EasyLoggerConfig>
     {
+        public const string settingsPath = "AillieoUtils/EasyLogger";
+
         [SerializeField]
         private ConfigEntry editorConfig = new ConfigEntry()
         {
@@ -70,7 +75,11 @@ namespace AillieoUtils.EasyLogger
         protected override void Awake()
         {
             base.Awake();
-            LoggerFactory.Init();
+
+            if (Application.isPlaying)
+            {
+                LoggerFactory.Init();
+            }
         }
     }
 }

@@ -1,5 +1,3 @@
-using UnityEngine;
-
 namespace AillieoUtils.EasyLogger
 {
     public class IMGUIAppender : IAppender
@@ -23,8 +21,7 @@ namespace AillieoUtils.EasyLogger
 
         public void OnReceiveLogItem(ref LogItem logItem)
         {
-            EnsureInstance();
-            instance.AppendLogItem(ref logItem);
+            IMGUILogDrawer.Instance.AppendLogItem(ref logItem);
         }
 
         public enum Alignment
@@ -42,21 +39,9 @@ namespace AillieoUtils.EasyLogger
 
         private void SetSwitcherWidgetPosition(Alignment alignment)
         {
-            EnsureInstance();
             int horizontal = (int)alignment & 0b11;
             int vertical = ((int)alignment & 0b1100) >> 2;
-            instance.SetSwitcherPosition(horizontal, vertical);
-        }
-
-        private static IMGUILogDrawer instance;
-
-        private static void EnsureInstance()
-        {
-            if (instance == null)
-            {
-                instance = new GameObject("IMGUILogDrawer").AddComponent<IMGUILogDrawer>();
-                Object.DontDestroyOnLoad(instance.gameObject);
-            }
+            IMGUILogDrawer.Instance.SetSwitcherPosition(horizontal, vertical);
         }
     }
 }

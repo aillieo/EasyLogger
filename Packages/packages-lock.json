@@ -5,28 +5,46 @@
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "d7e4ce43b0cc849eb4e53068e52e93942c8fc6c3"
+      "hash": "a88dfc9bd60cae594421fb91eb559b7c25ee612c"
     },
     "com.aillieo.unity-singleton": {
       "version": "https://github.com/aillieo/UnitySingleton.git#upm",
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "d992922e329738b25e644bdf16c956db0de07016"
+      "hash": "03f5e0508c8b7219d8d57c5558e64caac15d6e19"
     },
     "com.unity.ext.nunit": {
-      "version": "1.0.0",
+      "version": "1.0.6",
       "depth": 1,
       "source": "registry",
       "dependencies": {},
       "url": "https://packages.unity.com"
     },
-    "com.unity.test-framework": {
-      "version": "1.1.18",
+    "com.unity.ide.rider": {
+      "version": "3.0.17",
       "depth": 0,
       "source": "registry",
       "dependencies": {
-        "com.unity.ext.nunit": "1.0.0",
+        "com.unity.ext.nunit": "1.0.6"
+      },
+      "url": "https://packages.unity.com"
+    },
+    "com.unity.ide.visualstudio": {
+      "version": "2.0.16",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {
+        "com.unity.test-framework": "1.1.9"
+      },
+      "url": "https://packages.unity.com"
+    },
+    "com.unity.test-framework": {
+      "version": "1.1.33",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {
+        "com.unity.ext.nunit": "1.0.6",
         "com.unity.modules.imgui": "1.0.0",
         "com.unity.modules.jsonserialize": "1.0.0"
       },

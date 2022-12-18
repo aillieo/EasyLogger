@@ -32,6 +32,20 @@ namespace AillieoUtils.EasyLogger
                 Logger.sharedAppenders.Add(unityConsoleAppender);
             }
 
+            if (config.wsServerAppender)
+            {
+                try
+                {
+                    Uri uri = new Uri(config.remoteUri);
+                    WSServerAppender wsServerAppender = new WSServerAppender(uri);
+                    Logger.sharedAppenders.Add(wsServerAppender);
+                }
+                catch (Exception e)
+                {
+                    UnityEngine.Debug.LogException(e);
+                }
+            }
+
             Logger.receiveUnityLogEvents = config.receiveUnityLogEvents;
         }
 
