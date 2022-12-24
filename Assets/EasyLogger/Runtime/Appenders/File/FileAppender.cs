@@ -9,6 +9,8 @@ namespace AillieoUtils.EasyLogger
 {
     public class FileAppender : IAppender
     {
+        private object lockObj = new object();
+
         public IFormatter formatter { get; set; }
 
         private LogFileWriter writer;
@@ -20,7 +22,10 @@ namespace AillieoUtils.EasyLogger
                 return;
             }
 
-            writer.AppendLogItem(ref logItem);
+            lock (lockObj)
+            {
+                writer.AppendLogItem(ref logItem);
+            }
         }
 
         private void OnApplicationQuit()

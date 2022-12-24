@@ -34,14 +34,14 @@ namespace AillieoUtils.EasyLogger
                     isReceivingUnityLogEvents = value;
                     if (isReceivingUnityLogEvents)
                     {
-                        Application.logMessageReceived -= OnUnityLogEvent;
-                        Application.logMessageReceived += OnUnityLogEvent;
+                        Application.logMessageReceivedThreaded -= OnUnityLogEvent;
+                        Application.logMessageReceivedThreaded += OnUnityLogEvent;
                         Logger logger = LoggerFactory.GetLogger<UnityEngine.Debug>();
                         logger.RemoveAppender<UnityConsoleAppender>();
                     }
                     else
                     {
-                        Application.logMessageReceived -= OnUnityLogEvent;
+                        Application.logMessageReceivedThreaded -= OnUnityLogEvent;
                     }
                 }
             }
@@ -150,6 +150,7 @@ namespace AillieoUtils.EasyLogger
         }
 
         private static int internalCall = 0;
+
         private void LogWithFilter(LogLevel logLevel, object message)
         {
             if (internalCall > 0)
@@ -204,6 +205,8 @@ namespace AillieoUtils.EasyLogger
                 logger.Warning(condition);
                 break;
             case LogType.Error:
+            case LogType.Assert:
+            case LogType.Exception:
                 logger.Error(condition);
                 break;
             default:

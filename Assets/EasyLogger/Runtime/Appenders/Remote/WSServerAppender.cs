@@ -98,8 +98,6 @@ namespace AillieoUtils.EasyLogger
                 return;
             }
 
-            UnityEngine.Debug.Log(clientWebSocket.State);
-
             if (clientWebSocket.State != WebSocketState.Open)
             {
                 return;
@@ -141,11 +139,11 @@ namespace AillieoUtils.EasyLogger
 
             try
             {
-                clientWebSocket.CloseAsync(
+                var task = clientWebSocket.CloseAsync(
                     WebSocketCloseStatus.NormalClosure,
                     string.Empty,
-                    CancellationToken.None)
-                    .Wait();
+                    CancellationToken.None);
+                task.Wait();
             }
             catch (Exception e)
             {
