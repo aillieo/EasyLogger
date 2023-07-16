@@ -74,6 +74,10 @@ namespace AillieoUtils.EasyLogger
                 EditorGUI.indentLevel--;
             }
 
+            // customLoggerEntries
+            SerializedProperty customLoggerEntries = selected.FindPropertyRelative(nameof(ConfigEntry.customLoggerEntries));
+            EditorGUILayout.PropertyField(customLoggerEntries);
+
             serializedObject.ApplyModifiedProperties();
         }
 

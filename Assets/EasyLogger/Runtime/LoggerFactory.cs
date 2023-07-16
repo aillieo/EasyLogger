@@ -1,14 +1,16 @@
 using System;
 using System.Collections.Generic;
-using System.Net;
+using UnityEngine;
 
 namespace AillieoUtils.EasyLogger
 {
     public static class LoggerFactory
     {
         private static readonly Dictionary<string, Logger> cachedInstances = new Dictionary<string, Logger>(StringComparer.Ordinal);
+        private static readonly Dictionary<string, CustomLoggerEntry> customLoggerEntries = new Dictionary<string, CustomLoggerEntry>(StringComparer.Ordinal);
 
-        public static void Init()
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterAssembliesLoaded)]
+        private static void Init()
         {
             ConfigEntry config = EasyLoggerConfig.GetConfig();
 
@@ -47,6 +49,14 @@ namespace AillieoUtils.EasyLogger
             }
 
             Logger.receiveUnityLogEvents = config.receiveUnityLogEvents;
+
+            if (config.customLoggerEntries != null)
+            {
+                foreach (var custom in config.customLoggerEntries)
+                {
+                    customLoggerEntries[custom.module] = custom;
+                }
+            }
         }
 
         public static Logger GetLogger(string moduleName)
@@ -55,6 +65,11 @@ namespace AillieoUtils.EasyLogger
             {
                 instance = new Logger(moduleName);
                 cachedInstances.Add(moduleName, instance);
+
+                if (customLoggerEntries.TryGetValue(moduleName, out CustomLoggerEntry custom))
+                {
+                    instance.filter = custom.filter;
+                }
             }
 
             return instance;

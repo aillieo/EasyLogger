@@ -14,13 +14,13 @@ namespace AillieoUtils.EasyLogger
 
 #if UNITY_EDITOR
         [InitializeOnLoadMethod]
-        private static void OnEditorLaunch()
+        private static void OnApplicationLaunch()
         {
             EditorApplication.playModeStateChanged += (state) =>
             {
-                if (state == UnityEditor.PlayModeStateChange.ExitingEditMode)
+                if (state == PlayModeStateChange.ExitingEditMode)
                 {
-                    OnEditorApplicationQuit();
+                    onApplicationQuit?.Invoke();
                 }
             };
 
@@ -28,23 +28,11 @@ namespace AillieoUtils.EasyLogger
         }
 #else
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
-        private static void OnSessionLaunch()
+        private static void OnApplicationLaunch()
         {
-            Application.quitting += OnApplicationQuit;
+            Application.quitting += () => onApplicationQuit?.Invoke();
 
             onApplicationLaunch?.Invoke();
-        }
-#endif
-
-#if UNITY_EDITOR
-        private static void OnEditorApplicationQuit()
-        {
-            onApplicationQuit?.Invoke();
-        }
-#else
-        private static void OnApplicationQuit()
-        {
-            onApplicationQuit?.Invoke();
         }
 #endif
     }

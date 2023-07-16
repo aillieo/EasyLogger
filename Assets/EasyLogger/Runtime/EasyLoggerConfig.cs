@@ -20,6 +20,15 @@ namespace AillieoUtils.EasyLogger
 
         public bool wsServerAppender;
         public string remoteUri = "ws://localhost:8080";
+
+        public CustomLoggerEntry[] customLoggerEntries;
+    }
+
+    [Serializable]
+    public class CustomLoggerEntry
+    {
+        public string module;
+        public LogLevel filter;
     }
 
     [SettingsMenuPath(settingsPath)]
@@ -70,16 +79,6 @@ namespace AillieoUtils.EasyLogger
 #endif
 
             return configEntry;
-        }
-
-        protected override void Awake()
-        {
-            base.Awake();
-
-            if (Application.isPlaying)
-            {
-                LoggerFactory.Init();
-            }
         }
     }
 }
