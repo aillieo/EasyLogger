@@ -1,18 +1,23 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.IO;
-using System.Threading.Tasks;
-using UnityEngine;
+// -----------------------------------------------------------------------
+// <copyright file="ScreenShotImpl.cs" company="AillieoTech">
+// Copyright (c) AillieoTech. All rights reserved.
+// </copyright>
+// -----------------------------------------------------------------------
 
 namespace AillieoUtils.EasyLogger
 {
+    using System;
+    using System.Collections;
+    using System.IO;
+    using System.Threading.Tasks;
+    using UnityEngine;
+
     internal class ScreenShotImpl : SingletonMonoBehaviour<ScreenShotImpl>
     {
         public Task<string> CaptureAndSave(string path)
         {
             TaskCompletionSource<string> tcs = new TaskCompletionSource<string>();
-            StartCoroutine(InternalCaptureAndSave(path, tcs));
+            this.StartCoroutine(this.InternalCaptureAndSave(path, tcs));
             return tcs.Task;
         }
 

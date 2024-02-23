@@ -1,27 +1,33 @@
+// -----------------------------------------------------------------------
+// <copyright file="UnityConsoleAppender.cs" company="AillieoTech">
+// Copyright (c) AillieoTech. All rights reserved.
+// </copyright>
+// -----------------------------------------------------------------------
+
 namespace AillieoUtils.EasyLogger
 {
     public partial class UnityConsoleAppender : IAppender
     {
-        public IFormatter formatter { get; set; } = new UnityConsoleLogFormatter();
-
         private int internalCall = 0;
+
+        public IFormatter formatter { get; set; } = new UnityConsoleLogFormatter();
 
         public void OnReceiveLogItem(ref LogItem logItem)
         {
-            if (internalCall > 0)
+            if (this.internalCall > 0)
             {
                 return;
             }
 
-            internalCall++;
+            this.internalCall++;
 
             try
             {
-                UnityConsoleLog(logItem.logLevel, logItem.message);
+                this.UnityConsoleLog(logItem.logLevel, logItem.message);
             }
             finally
             {
-                internalCall--;
+                this.internalCall--;
             }
         }
 
@@ -29,15 +35,15 @@ namespace AillieoUtils.EasyLogger
         {
             switch (logLevel)
             {
-            case LogLevel.Warning:
-                UnityEngine.Debug.LogWarning(message);
-                break;
-            case LogLevel.Error:
-                UnityEngine.Debug.LogError(message);
-                break;
-            default:
-                UnityEngine.Debug.Log(message);
-                break;
+                case LogLevel.Warning:
+                    UnityEngine.Debug.LogWarning(message);
+                    break;
+                case LogLevel.Error:
+                    UnityEngine.Debug.LogError(message);
+                    break;
+                default:
+                    UnityEngine.Debug.Log(message);
+                    break;
             }
         }
     }

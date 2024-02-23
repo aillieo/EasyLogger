@@ -1,9 +1,15 @@
-using System;
-using System.Collections.Generic;
-using UnityEngine;
+// -----------------------------------------------------------------------
+// <copyright file="LoggerFactory.cs" company="AillieoTech">
+// Copyright (c) AillieoTech. All rights reserved.
+// </copyright>
+// -----------------------------------------------------------------------
 
 namespace AillieoUtils.EasyLogger
 {
+    using System;
+    using System.Collections.Generic;
+    using UnityEngine;
+
     public static class LoggerFactory
     {
         private static readonly Dictionary<string, Logger> cachedInstances = new Dictionary<string, Logger>(StringComparer.Ordinal);

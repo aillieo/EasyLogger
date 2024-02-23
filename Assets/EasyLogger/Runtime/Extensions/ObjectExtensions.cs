@@ -1,5 +1,13 @@
+// -----------------------------------------------------------------------
+// <copyright file="ObjectExtensions.cs" company="AillieoTech">
+// Copyright (c) AillieoTech. All rights reserved.
+// </copyright>
+// -----------------------------------------------------------------------
+
 namespace AillieoUtils.EasyLogger
 {
+    using UnityEngine;
+
     public static class ObjectExtensions
     {
         public static Logger GetLogger<T>(this T obj)
@@ -25,6 +33,32 @@ namespace AillieoUtils.EasyLogger
         public static void LogError<T>(this T obj, object message)
         {
             obj.GetLogger().Error(message);
+        }
+
+        public static void Dump<T>(this T obj)
+        {
+            try
+            {
+                string json = JsonUtility.ToJson(obj);
+                obj.Log(json);
+            }
+            catch
+            {
+                obj.Log(obj);
+            }
+        }
+
+        public static void DumpAsError<T>(this T obj)
+        {
+            try
+            {
+                string json = JsonUtility.ToJson(obj);
+                obj.LogError(json);
+            }
+            catch
+            {
+                obj.LogError(obj);
+            }
         }
     }
 }

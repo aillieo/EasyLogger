@@ -1,11 +1,15 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEditor;
-using UnityEngine;
+// -----------------------------------------------------------------------
+// <copyright file="EasyLoggerConfigEditor.cs" company="AillieoTech">
+// Copyright (c) AillieoTech. All rights reserved.
+// </copyright>
+// -----------------------------------------------------------------------
 
 namespace AillieoUtils.EasyLogger
 {
+    using System;
+    using UnityEditor;
+    using UnityEngine;
+
     [CustomEditor(typeof(EasyLoggerConfig))]
     internal class EasyLoggerConfigEditor : Editor
     {
@@ -18,18 +22,18 @@ namespace AillieoUtils.EasyLogger
 
         public override void OnInspectorGUI()
         {
-            tab = GUILayout.Toolbar(tab, presets);
+            this.tab = GUILayout.Toolbar(this.tab, presets);
             SerializedProperty selected = null;
-            switch (tab)
+            switch (this.tab)
             {
                 case 0:
-                    selected = serializedObject.FindProperty("editorConfig");
+                    selected = this.serializedObject.FindProperty("editorConfig");
                     break;
                 case 1:
-                    selected = serializedObject.FindProperty("debugConfig");
+                    selected = this.serializedObject.FindProperty("debugConfig");
                     break;
                 case 2:
-                    selected = serializedObject.FindProperty("releaseConfig");
+                    selected = this.serializedObject.FindProperty("releaseConfig");
                     break;
                 default:
                     throw new IndexOutOfRangeException();
@@ -78,7 +82,7 @@ namespace AillieoUtils.EasyLogger
             SerializedProperty customLoggerEntries = selected.FindPropertyRelative(nameof(ConfigEntry.customLoggerEntries));
             EditorGUILayout.PropertyField(customLoggerEntries);
 
-            serializedObject.ApplyModifiedProperties();
+            this.serializedObject.ApplyModifiedProperties();
         }
 
         [MenuItem("AillieoUtils/EasyLogger/Settings")]

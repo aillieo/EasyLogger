@@ -1,10 +1,16 @@
-using System;
-using UnityEngine;
+// -----------------------------------------------------------------------
+// <copyright file="EasyLoggerConfig.cs" company="AillieoTech">
+// Copyright (c) AillieoTech. All rights reserved.
+// </copyright>
+// -----------------------------------------------------------------------
 
 namespace AillieoUtils.EasyLogger
 {
+    using System;
+    using UnityEngine;
+
     [Serializable]
-    public class ConfigEntry
+    internal class ConfigEntry
     {
         public bool receiveUnityLogEvents;
         public LogLevel filter;
@@ -25,16 +31,16 @@ namespace AillieoUtils.EasyLogger
     }
 
     [Serializable]
-    public class CustomLoggerEntry
+    internal class CustomLoggerEntry
     {
         public string module;
         public LogLevel filter;
     }
 
     [SettingsMenuPath(settingsPath)]
-    public class EasyLoggerConfig : SingletonScriptableObject<EasyLoggerConfig>
+    internal class EasyLoggerConfig : SingletonScriptableObject<EasyLoggerConfig>
     {
-        public const string settingsPath = "AillieoUtils/EasyLogger";
+        public const string settingsPath = "Project/AillieoUtils/EasyLogger";
 
         [SerializeField]
         private ConfigEntry editorConfig = new ConfigEntry()

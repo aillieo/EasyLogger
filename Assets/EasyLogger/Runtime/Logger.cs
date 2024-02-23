@@ -1,24 +1,36 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading;
-using UnityEngine;
+// -----------------------------------------------------------------------
+// <copyright file="Logger.cs" company="AillieoTech">
+// Copyright (c) AillieoTech. All rights reserved.
+// </copyright>
+// -----------------------------------------------------------------------
 
 namespace AillieoUtils.EasyLogger
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Threading;
+    using UnityEngine;
+
     public class Logger
     {
-        internal Logger(string moduleName)
-        {
-            this.moduleName = moduleName;
-        }
+        internal static readonly List<IAppender> sharedAppenders = new List<IAppender>();
 
-        private readonly string moduleName;
+        internal static LogLevel sharedFilter = LogLevel.Any;
 
         private static readonly IFormatter defaultFormatter = new DefaultFormatter();
 
         private static bool isReceivingUnityLogEvents = false;
+
+        private readonly string moduleName;
+
+        private LogLevel? instanceFilter = null;
+
+        private List<IAppender> appenders = null;
+
+        internal Logger(string moduleName)
+        {
+            this.moduleName = moduleName;
+        }
 
         public static bool receiveUnityLogEvents
         {
@@ -47,16 +59,13 @@ namespace AillieoUtils.EasyLogger
             }
         }
 
-        internal static LogLevel sharedFilter = LogLevel.Any;
-        private LogLevel? instanceFilter = null;
-
         public LogLevel filter
         {
             get
             {
-                if (instanceFilter.HasValue)
+                if (this.instanceFilter.HasValue)
                 {
-                    return instanceFilter.Value;
+                    return this.instanceFilter.Value;
                 }
 
                 return sharedFilter;
@@ -64,12 +73,9 @@ namespace AillieoUtils.EasyLogger
 
             set
             {
-                instanceFilter = value;
+                this.instanceFilter = value;
             }
         }
-
-        internal static readonly List<IAppender> sharedAppenders = new List<IAppender>();
-        private List<IAppender> appenders = null;
 
         public void AddAppender(IAppender appender)
         {
@@ -78,7 +84,7 @@ namespace AillieoUtils.EasyLogger
                 this.appenders = new List<IAppender>(sharedAppenders);
             }
 
-            appenders.Add(appender);
+            this.appenders.Add(appender);
         }
 
         public void AddAppenders(params IAppender[] appenders)
@@ -98,17 +104,18 @@ namespace AillieoUtils.EasyLogger
                 this.appenders = new List<IAppender>(sharedAppenders);
             }
 
-            appenders.Remove(appender);
+            this.appenders.Remove(appender);
         }
 
-        public void RemoveAppender<T>() where T : IAppender
+        public void RemoveAppender<T>()
+            where T : IAppender
         {
             if (this.appenders == null)
             {
                 this.appenders = new List<IAppender>(sharedAppenders);
             }
 
-            appenders.RemoveAll(a => a is T);
+            this.appenders.RemoveAll(a => a is T);
         }
 
         public void RemoveAppender(Type type)
@@ -118,7 +125,7 @@ namespace AillieoUtils.EasyLogger
                 this.appenders = new List<IAppender>(sharedAppenders);
             }
 
-            appenders.RemoveAll(a => type.IsAssignableFrom(a.GetType()));
+            this.appenders.RemoveAll(a => type.IsAssignableFrom(a.GetType()));
         }
 
         public void RemoveAllAppenders()
@@ -131,22 +138,22 @@ namespace AillieoUtils.EasyLogger
 
         public void Debug(object message)
         {
-            LogWithFilter(LogLevel.Debug, message);
+            this.LogWithFilter(LogLevel.Debug, message);
         }
 
         public void Log(object message)
         {
-            LogWithFilter(LogLevel.Log, message);
+            this.LogWithFilter(LogLevel.Log, message);
         }
 
         public void Warning(object message)
         {
-            LogWithFilter(LogLevel.Warning, message);
+            this.LogWithFilter(LogLevel.Warning, message);
         }
 
         public void Error(object message)
         {
-            LogWithFilter(LogLevel.Error, message);
+            this.LogWithFilter(LogLevel.Error, message);
         }
 
         private static int internalCall = 0;
@@ -166,24 +173,19 @@ namespace AillieoUtils.EasyLogger
                 int threadId = Thread.CurrentThread.ManagedThreadId;
                 string stackTrace = (logLevel & LogLevel.Error) > 0 ?
                     StackTraceHelper.Extract(3) : string.Empty;
-                foreach (var appender in appenders ?? sharedAppenders)
+                foreach (var appender in this.appenders ?? sharedAppenders)
                 {
                     try
                     {
                         IFormatter formatter = appender.formatter ?? defaultFormatter;
-                        LogItem logItem = new LogItem()
-                        {
-                            logger = moduleName,
-                            logLevel = logLevel,
-                            message = formatter.Format(
-                                moduleName,
-                                logLevel,
-                                message,
-                                dateTime,
-                                threadId,
-                                stackTrace),
-                            unityContext = null,
-                        };
+                        var msg = formatter.Format(
+                            this.moduleName,
+                            logLevel,
+                            message,
+                            dateTime,
+                            threadId,
+                            stackTrace);
+                        LogItem logItem = new LogItem(this.moduleName, logLevel, msg, null);
                         appender.OnReceiveLogItem(ref logItem);
                     }
                     catch
@@ -201,17 +203,17 @@ namespace AillieoUtils.EasyLogger
 
             switch (type)
             {
-            case LogType.Warning:
-                logger.Warning(condition);
-                break;
-            case LogType.Error:
-            case LogType.Assert:
-            case LogType.Exception:
-                logger.Error(condition);
-                break;
-            default:
-                logger.Log(condition);
-                break;
+                case LogType.Warning:
+                    logger.Warning(condition);
+                    break;
+                case LogType.Error:
+                case LogType.Assert:
+                case LogType.Exception:
+                    logger.Error(condition);
+                    break;
+                default:
+                    logger.Log(condition);
+                    break;
             }
         }
     }

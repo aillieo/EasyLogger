@@ -1,14 +1,18 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-#if UNITY_EDITOR
-using UnityEditor;
-#endif
-using UnityEngine;
+// -----------------------------------------------------------------------
+// <copyright file="TextureAssets.cs" company="AillieoTech">
+// Copyright (c) AillieoTech. All rights reserved.
+// </copyright>
+// -----------------------------------------------------------------------
 
 namespace AillieoUtils.EasyLogger
 {
-    public class TextureAssets
+    using System;
+#if UNITY_EDITOR
+    using UnityEditor;
+#endif
+    using UnityEngine;
+
+    internal class TextureAssets
     {
         public static readonly string logo = "iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAACNklEQVRYCcVX0VGDQBBNHAugA88KZMYG0oFYgdeBWknGCiQdYAXBfz/owOtAOtD3cDfZEAgcZHRnHu/d5nb3eQEmLm8XH4v/jIszDXfosxVQj45zGQiY6IAV8AiMjnMZ4MAXmZqNno6Ncw2szbBctAOPNjHHQIpBK0Cjhihk8aDJIZ5jgENowpkhG9EZODH5XjnHAIcwlKkLoKZA+OY6cJlqgEOd9G7f9bnkR30NUw3cyRBSaTSlPg0pNHEyphrgCWi8qRAO4Ep0+3QkvacpBjzKE2lRgwvRlvQUMpvs0lMM2OPvGs45mk+gPRN9EWuADTPTTP9Sk2pkjWsuSWtYUnuKNeD3pYsAXZl1W9p3gmt/qOtYA/bR0gHaq80lEkGSXviIYgw4VKemQ250n1ST1vjB3hgD3lTy6INZ98lcPnDglegDijFwhcpS0HfzHTTHIsh+5jtPYfkHP8k8hr8CfDKuhUG/EXMCWhPLOQo4PAEy4CD+wgAHFjL16NU8xgBdf0fiUwYq6T2TIuE0Sb60ix5t32Ql9rz37GunEyRqSVbgADiAp/AMNDF0E7LJl+wl3QOFWcfIJ2xeAwHgzdjE0FeQ6UZwAKYOZ5ucF4QDdn2HDNjjnzOcg2tAe+zeCacMJNYp9AaYG9ojQyP2P/l/ATdpBIhKFzO4QG0t9Z586gR4t2qw8FyRS6Pma+gy4LFhC6SykaTPsUlFywwV7LuSSvZPu94DN7KhFA5gYm6UaMBTrQFqRvoDM/NjBzTqqUwAAAAASUVORK5CYII=";
         public static readonly string erroricon = "iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAADCElEQVRYCe1WTUhUURg9No5mUeTKCmYRIVGQIWqEREi0rKWthIKgpbjubx8UKEE7oXUb6Yc2rYJW0n9oUeRY6pTaDDlaNs57czvnOm9485z3NDNaNB98M/e+7+9857vvzgBV+d8ZqFkHAU2M2U01gVgvV5LPvwVsoVsvKNQhYGhvA7q7gH0uUKDNizebuOYz3AeefQDucPmKuqHS0QVcWwDm2boJ01Fgdi9wmZVbNrJ6m4r/ABYcFs+F6M8iMIKY2QNcJICDGwHisIpzqHP5QOGleNwsJRJlgDwQr4HpZuAKARz6ExDtx4Hri8BisHguFjNOf78x09PG6esrAyGGNKI3y+O4RADrYqKJB+4qZ55VcXVWpo2Nxh0eNhJ3aKjcVvQVCI7jy07gAkFsr8QED2+oJE4AB7YC2wjAHnkd+5LOz8PMztrgwsQE9AaUbMU1AWM/0HRsmYGEdQ581Ab2/q1LKh12YRP7DVobx0EhmUSMa3dszPp476TfV8AoarSSGVEA7E2jBMUkSlQSAXPHxxHntJ3JSesTrKC9YjWKUmBgsSoAvnaQBkUZYyxsMhk4BCKfSgDEkEYTJpEAFBjFgDovpNN/jwEBUGdhI8inUnBGR5EnCDFSiYFibOhhj2IgVgfURjFgCCA7MAAnn19RnHisMIcaUJqKkwhFxoCpR8BbXr/f1Zmig7qltxc7CKChu9sy5beroorzMpp5vPzD9InbFRIF4PNz4HYPMMjEOVHsjcN+19SgrrMT8ZYWxFtbS2dFhWUXte/4s8z4m2ngAbe801aKDmmUpD4yyRMCOMlLiUzUq4DASHMjI3CmpjA3OAg3m7UMyR6nvge+ngVuJIG73L6kVhSxuxZpPwr03ALOs3CDikgEQrSLRiXSfjOVRTNngP6JVYrT1V5k+l5NUhxgRkyc4rXKInWiWKpuvXU91+w8fY6d0z+yc7paWSsDnn8H/2WcPgI0a85+EQti4yHwlJ3f4/KF3x62/l0AyrOrqGLcL16uMT5c839Cf4LquspAlYF/wsAv5L1uQQehuBcAAAAASUVORK5CYII=";
@@ -31,7 +35,7 @@ namespace AillieoUtils.EasyLogger
         }
 
 #if UNITY_EDITOR
-        //[MenuItem("Assets/CopyBase64Info", false, 0)]
+        // [MenuItem("Assets/CopyBase64Info", false, 0)]
         public static void CopyBase64Info()
         {
             Debug.Log(Selection.activeObject);

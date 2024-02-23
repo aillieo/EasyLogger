@@ -1,12 +1,18 @@
-using System;
-using System.Net.WebSockets;
-using UnityEngine;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
+// -----------------------------------------------------------------------
+// <copyright file="WSServerAppender.cs" company="AillieoTech">
+// Copyright (c) AillieoTech. All rights reserved.
+// </copyright>
+// -----------------------------------------------------------------------
 
 namespace AillieoUtils.EasyLogger
 {
+    using System;
+    using System.Net.WebSockets;
+    using System.Text;
+    using System.Threading;
+    using System.Threading.Tasks;
+    using UnityEngine;
+
     public class WSServerAppender : IAppender
     {
         public event Action<byte[]> OnReceive;
@@ -18,7 +24,7 @@ namespace AillieoUtils.EasyLogger
 
         public WSServerAppender(Uri uri)
         {
-            ApplicationEvents.onApplicationQuit += OnApplicationQuit;
+            ApplicationEvents.onApplicationQuit += this.OnApplicationQuit;
             this.uri = uri;
             this.ConnectAndListen();
         }
@@ -40,19 +46,19 @@ namespace AillieoUtils.EasyLogger
 
         private async void ConnectAndListen()
         {
-            clientWebSocket = new ClientWebSocket();
+            this.clientWebSocket = new ClientWebSocket();
             try
             {
-                clientWebSocket
+                this.clientWebSocket
                     .ConnectAsync(this.uri, CancellationToken.None)
                     .Wait();
             }
             catch (AggregateException ae) when (ae.InnerException is WebSocketException webSocketException)
             {
                 Debug.Log(webSocketException.Message);
-                await CloseAsync();
+                await this.CloseAsync();
                 await Task.Delay(TimeSpan.FromSeconds(60));
-                ConnectAndListen();
+                this.ConnectAndListen();
                 return;
             }
 
@@ -62,12 +68,12 @@ namespace AillieoUtils.EasyLogger
                 try
                 {
                     var asBuffer = new ArraySegment<byte>(buffer);
-                    var result = await clientWebSocket.ReceiveAsync(asBuffer, CancellationToken.None);
+                    var result = await this.clientWebSocket.ReceiveAsync(asBuffer, CancellationToken.None);
                     if (result.MessageType == WebSocketMessageType.Text)
                     {
                         byte[] resultBuffer = new byte[result.Count];
                         Array.Copy(buffer, 0, resultBuffer, 0, result.Count);
-                        OnReceive?.Invoke(resultBuffer);
+                        this.OnReceive?.Invoke(resultBuffer);
                     }
                 }
                 catch (ObjectDisposedException objectDisposedException)
@@ -78,9 +84,9 @@ namespace AillieoUtils.EasyLogger
                 }
                 catch (WebSocketException webSocketException)
                 {
-                    await CloseAsync();
+                    await this.CloseAsync();
                     await Task.Delay(1000);
-                    ConnectAndListen();
+                    this.ConnectAndListen();
                     return;
                 }
                 catch (Exception e)
@@ -93,19 +99,19 @@ namespace AillieoUtils.EasyLogger
 
         private async void SendAsync(byte[] bytes)
         {
-            if (clientWebSocket == null)
+            if (this.clientWebSocket == null)
             {
                 return;
             }
 
-            if (clientWebSocket.State != WebSocketState.Open)
+            if (this.clientWebSocket.State != WebSocketState.Open)
             {
                 return;
             }
 
             try
             {
-                clientWebSocket.SendAsync(
+                this.clientWebSocket.SendAsync(
                     new ArraySegment<byte>(bytes),
                     WebSocketMessageType.Text,
                     endOfMessage: true,
@@ -120,9 +126,9 @@ namespace AillieoUtils.EasyLogger
             }
             catch (WebSocketException webSocketException)
             {
-                await CloseAsync();
+                await this.CloseAsync();
                 await Task.Delay(1000);
-                ConnectAndListen();
+                this.ConnectAndListen();
             }
             catch (Exception e)
             {
@@ -132,25 +138,24 @@ namespace AillieoUtils.EasyLogger
 
         private async Task CloseAsync()
         {
-            if (clientWebSocket == null || clientWebSocket.State != WebSocketState.Open)
+            if (this.clientWebSocket == null || this.clientWebSocket.State != WebSocketState.Open)
             {
                 return;
             }
 
             try
             {
-                var task = clientWebSocket.CloseAsync(
+                await this.clientWebSocket.CloseAsync(
                     WebSocketCloseStatus.NormalClosure,
                     string.Empty,
                     CancellationToken.None);
-                task.Wait();
             }
             catch (Exception e)
             {
                 Debug.LogException(e);
             }
 
-            clientWebSocket.Dispose();
+            this.clientWebSocket.Dispose();
         }
     }
 }

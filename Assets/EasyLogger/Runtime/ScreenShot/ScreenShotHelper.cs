@@ -1,12 +1,16 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.IO;
-using UnityEngine;
-using System.Threading.Tasks;
+// -----------------------------------------------------------------------
+// <copyright file="ScreenShotHelper.cs" company="AillieoTech">
+// Copyright (c) AillieoTech. All rights reserved.
+// </copyright>
+// -----------------------------------------------------------------------
 
 namespace AillieoUtils.EasyLogger
 {
+    using System;
+    using System.IO;
+    using System.Threading.Tasks;
+    using UnityEngine;
+
     public static class ScreenShotHelper
     {
         private static readonly string extensionJpg = ".jpg";
@@ -36,11 +40,7 @@ namespace AillieoUtils.EasyLogger
 
         private static string GetDefaultDirectory()
         {
-#if UNITY_EDITOR
-            return Path.Combine(Application.dataPath, "..", "ScreenShots");
-#else
-            return Path.Combine(Application.persistentDataPath, "ScreenShots");
-#endif
+            return FileUtils.GetPersistentPath("ScreenShots");
         }
     }
 }

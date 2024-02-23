@@ -1,6 +1,13 @@
-using System;
+// -----------------------------------------------------------------------
+// <copyright file="LogLevel.cs" company="AillieoTech">
+// Copyright (c) AillieoTech. All rights reserved.
+// </copyright>
+// -----------------------------------------------------------------------
+
 namespace AillieoUtils.EasyLogger
 {
+    using System;
+
     [Flags]
     public enum LogLevel
     {

@@ -1,58 +1,62 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
+// -----------------------------------------------------------------------
+// <copyright file="LogFileWriter.cs" company="AillieoTech">
+// Copyright (c) AillieoTech. All rights reserved.
+// </copyright>
+// -----------------------------------------------------------------------
 
 namespace AillieoUtils.EasyLogger
 {
-    public class LogFileWriter
+    using System.IO;
+
+    internal class LogFileWriter
     {
         private FileInfo fileInfo = null;
         private StreamWriter streamWriter = null;
 
         internal LogFileWriter(string path)
         {
-            fileInfo = new FileInfo(path);
+            this.fileInfo = new FileInfo(path);
         }
 
         internal void Dispose()
         {
-            if (fileInfo == null)
+            if (this.fileInfo == null)
             {
                 return;
             }
 
-            if (streamWriter != null)
+            if (this.streamWriter != null)
             {
-                streamWriter.Flush();
-                streamWriter.Close();
-                streamWriter.Dispose();
-                streamWriter = null;
+                this.streamWriter.Flush();
+                this.streamWriter.Close();
+                this.streamWriter.Dispose();
+                this.streamWriter = null;
             }
 
-            fileInfo = null;
+            this.fileInfo = null;
         }
 
         internal void AppendLogItem(ref LogItem logItem)
         {
-            if (!EnsureWriter())
+            if (!this.EnsureWriter())
             {
                 return;
             }
 
-            streamWriter.WriteLine(logItem.message);
+            this.streamWriter.WriteLine(logItem.message);
         }
 
         private bool EnsureWriter()
         {
-            if (fileInfo == null)
+            if (this.fileInfo == null)
             {
                 return false;
             }
 
-            if (streamWriter == null)
+            if (this.streamWriter == null)
             {
-                streamWriter = fileInfo.CreateText();
-                streamWriter.AutoFlush = true;
+                this.streamWriter = this.fileInfo.CreateText();
+                this.streamWriter.AutoFlush = true;
             }
 
             return true;

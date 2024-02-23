@@ -1,5 +1,6 @@
 {
     "name": "AillieoUtils.EasyLogger",
+    "rootNamespace": "",
     "references": [
         "AillieoUtils.FileUtils",
         "AillieoUtils.UnitySingleton"

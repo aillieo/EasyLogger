@@ -1,13 +1,17 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text.RegularExpressions;
-using UnityEditor;
-using UnityEngine;
+// -----------------------------------------------------------------------
+// <copyright file="UnityConsoleLogLocator.cs" company="AillieoTech">
+// Copyright (c) AillieoTech. All rights reserved.
+// </copyright>
+// -----------------------------------------------------------------------
 
 namespace AillieoUtils.EasyLogger
 {
+    using System;
+    using System.Linq;
+    using System.Reflection;
+    using System.Text.RegularExpressions;
+    using UnityEditor;
+
     internal static class UnityConsoleLogLocator
     {
         private static readonly string loggerScript = "EasyLogger/Runtime/Logger.cs";

@@ -1,10 +1,16 @@
-using System;
-using System.Diagnostics;
-using System.Reflection;
-using UnityEngine;
+// -----------------------------------------------------------------------
+// <copyright file="StackTraceHelper.cs" company="AillieoTech">
+// Copyright (c) AillieoTech. All rights reserved.
+// </copyright>
+// -----------------------------------------------------------------------
 
 namespace AillieoUtils.EasyLogger
 {
+    using System;
+    using System.Diagnostics;
+    using System.Reflection;
+    using UnityEngine;
+
     internal static class StackTraceHelper
     {
         private static Func<StackTrace, string> StackTraceUtility_ExtractFormattedStackTrace;

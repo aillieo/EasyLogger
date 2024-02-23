@@ -1,20 +1,39 @@
+// -----------------------------------------------------------------------
+// <copyright file="IMGUIAppender.cs" company="AillieoTech">
+// Copyright (c) AillieoTech. All rights reserved.
+// </copyright>
+// -----------------------------------------------------------------------
+
 namespace AillieoUtils.EasyLogger
 {
     public class IMGUIAppender : IAppender
     {
-        public IFormatter formatter { get; set; }
-
         private Alignment switcherAlignmentValue = Alignment.TopLeft;
+
+        public enum Alignment
+        {
+            TopLeft = 0b0000 | 0b0000,
+            Top = 0b0001 | 0b0000,
+            TopRight = 0b0010 | 0b0000,
+            Left = 0b0000 | 0b0100,
+            Center = 0b0001 | 0b0100,
+            Right = 0b0010 | 0b0100,
+            BottomLeft = 0b0000 | 0b1000,
+            Bottom = 0b0001 | 0b1000,
+            BottomRight = 0b0010 | 0b1000,
+        }
+
+        public IFormatter formatter { get; set; }
 
         public Alignment switcherAlignment
         {
-            get => switcherAlignment;
+            get => this.switcherAlignment;
             set
             {
-                if (switcherAlignmentValue != value)
+                if (this.switcherAlignmentValue != value)
                 {
-                    switcherAlignmentValue = value;
-                    SetSwitcherWidgetPosition(switcherAlignmentValue);
+                    this.switcherAlignmentValue = value;
+                    this.SetSwitcherWidgetPosition(this.switcherAlignmentValue);
                 }
             }
         }
@@ -22,19 +41,6 @@ namespace AillieoUtils.EasyLogger
         public void OnReceiveLogItem(ref LogItem logItem)
         {
             IMGUILogDrawer.Instance.AppendLogItem(ref logItem);
-        }
-
-        public enum Alignment
-        {
-            TopLeft =       0b0000 | 0b0000,
-            Top =           0b0001 | 0b0000,
-            TopRight =      0b0010 | 0b0000,
-            Left =          0b0000 | 0b0100,
-            Center =        0b0001 | 0b0100,
-            Right =         0b0010 | 0b0100,
-            BottomLeft =    0b0000 | 0b1000,
-            Bottom =        0b0001 | 0b1000,
-            BottomRight =   0b0010 | 0b1000,
         }
 
         private void SetSwitcherWidgetPosition(Alignment alignment)

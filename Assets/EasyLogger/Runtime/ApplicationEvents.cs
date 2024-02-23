@@ -1,12 +1,17 @@
-using UnityEngine;
-using System;
-#if UNITY_EDITOR
-using UnityEditor;
-#endif
+// -----------------------------------------------------------------------
+// <copyright file="ApplicationEvents.cs" company="AillieoTech">
+// Copyright (c) AillieoTech. All rights reserved.
+// </copyright>
+// -----------------------------------------------------------------------
 
 namespace AillieoUtils.EasyLogger
 {
-    public static class ApplicationEvents
+    using System;
+#if UNITY_EDITOR
+    using UnityEditor;
+#endif
+
+    internal static class ApplicationEvents
     {
         public static event Action onApplicationLaunch;
 

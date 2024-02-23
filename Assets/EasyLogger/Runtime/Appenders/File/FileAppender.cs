@@ -1,60 +1,24 @@
-using System;
-using System.IO;
-#if UNITY_EDITOR
-using UnityEditor;
-#endif
-using UnityEngine;
+// -----------------------------------------------------------------------
+// <copyright file="FileAppender.cs" company="AillieoTech">
+// Copyright (c) AillieoTech. All rights reserved.
+// </copyright>
+// -----------------------------------------------------------------------
 
 namespace AillieoUtils.EasyLogger
 {
+    using System;
+    using System.IO;
+#if UNITY_EDITOR
+    using UnityEditor;
+#endif
+
     public class FileAppender : IAppender
     {
         private object lockObj = new object();
 
-        public IFormatter formatter { get; set; }
-
         private LogFileWriter writer;
 
-        public void OnReceiveLogItem(ref LogItem logItem)
-        {
-            if (writer == null)
-            {
-                return;
-            }
-
-            lock (lockObj)
-            {
-                writer.AppendLogItem(ref logItem);
-            }
-        }
-
-        private void OnApplicationQuit()
-        {
-            if (writer != null)
-            {
-                writer.Dispose();
-                writer = null;
-            }
-        }
-
-        private static string GetLogFolder()
-        {
-#if UNITY_EDITOR
-            return Path.Combine(Application.dataPath, "..", "Logs");
-#else
-            return Path.Combine(Application.persistentDataPath, "Logs");
-#endif
-        }
-
-#if UNITY_EDITOR
-        [MenuItem("AillieoUtils/EasyLogger/LocateLogFolder", false)]
-        private static void LocateLogFolder()
-        {
-            EditorUtility.RevealInFinder(GetLogFolder());
-        }
-#endif
-
-        public FileAppender(int maxFileCountKept, int maxDaysKept)
+        internal FileAppender(int maxFileCountKept, int maxDaysKept)
         {
             try
             {
@@ -71,7 +35,7 @@ namespace AillieoUtils.EasyLogger
 
                 string path = Path.Combine(folder, $"{DateTime.Now:yyyyMMddHHmmssfff}.log");
 
-                writer = new LogFileWriter(path);
+                this.writer = new LogFileWriter(path);
             }
             catch (Exception e)
             {
@@ -79,7 +43,44 @@ namespace AillieoUtils.EasyLogger
             }
             finally
             {
-                ApplicationEvents.onApplicationQuit += OnApplicationQuit;
+                ApplicationEvents.onApplicationQuit += this.OnApplicationQuit;
+            }
+        }
+
+        public IFormatter formatter { get; set; }
+
+        public void OnReceiveLogItem(ref LogItem logItem)
+        {
+            if (this.writer == null)
+            {
+                return;
+            }
+
+            lock (this.lockObj)
+            {
+                this.writer.AppendLogItem(ref logItem);
+            }
+        }
+
+        private static string GetLogFolder()
+        {
+            return FileUtils.GetPersistentPath("Logs");
+        }
+
+#if UNITY_EDITOR
+        [MenuItem("AillieoUtils/EasyLogger/LocateLogFolder", false)]
+        private static void LocateLogFolder()
+        {
+            EditorUtility.RevealInFinder(GetLogFolder());
+        }
+#endif
+
+        private void OnApplicationQuit()
+        {
+            if (this.writer != null)
+            {
+                this.writer.Dispose();
+                this.writer = null;
             }
         }
     }

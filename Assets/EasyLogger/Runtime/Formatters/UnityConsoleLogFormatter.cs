@@ -1,14 +1,26 @@
-using System;
-using System.Globalization;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Text.RegularExpressions;
+// -----------------------------------------------------------------------
+// <copyright file="UnityConsoleLogFormatter.cs" company="AillieoTech">
+// Copyright (c) AillieoTech. All rights reserved.
+// </copyright>
+// -----------------------------------------------------------------------
 
 namespace AillieoUtils.EasyLogger
 {
-    public class UnityConsoleLogFormatter : IFormatter
+    using System;
+    using System.Globalization;
+    using System.Linq;
+    using System.Reflection;
+    using System.Text;
+    using System.Text.RegularExpressions;
+
+    internal class UnityConsoleLogFormatter : IFormatter
     {
+        private static readonly Regex regex = new Regex(@"(.+\[[\d\w]+\] in )([\S]+.cs)(:(\d+))");
+        private static readonly string rep = @"$1<a href=""$2"" line=""$4"">$2$3</a>";
+
+        // ConsoleWindow.StacktraceWithHyperlinks(this.m_ActiveText);
+        private static Func<string, string> ConsoleWindow_StacktraceWithHyperlinks;
+
         public string Format(string logger, LogLevel logLevel, object message, DateTime time, int thread, string stackTrace)
         {
             if (string.IsNullOrWhiteSpace(stackTrace))
@@ -21,13 +33,7 @@ namespace AillieoUtils.EasyLogger
             }
         }
 
-        // ConsoleWindow.StacktraceWithHyperlinks(this.m_ActiveText);
-        private static Func<string, string> ConsoleWindow_StacktraceWithHyperlinks;
-
-        private static readonly Regex regex = new Regex(@"(.+\[[\d\w]+\] in )([\S]+.cs)(:(\d+))");
-        private static readonly string rep = @"$1<a href=""$2"" line=""$4"">$2$3</a>";
-
-        public static string ProcessStacktrace(string rawString)
+        internal static string ProcessStacktrace(string rawString)
         {
             if (ConsoleWindow_StacktraceWithHyperlinks == null)
             {
